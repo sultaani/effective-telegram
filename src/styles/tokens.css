@@ -1,0 +1,52 @@
+/* KCOE design tokens. Light theme only: no dark-mode overrides by design.
+   Text pairs were checked against WCAG AA (>= 4.5:1).
+   Brand colours are PROVISIONAL until the college confirms its crest colours. */
+:root {
+  --kcoe-white: #ffffff;
+  --kcoe-surface: #f5f7fa;
+  --kcoe-surface-2: #eaeff5;
+  --kcoe-border: #d5dde8;
+  --kcoe-ink: #1a2433;      /* 15.6:1 on white */
+  --kcoe-muted: #4a5568;    /* 7.5:1 on white */
+
+  /* Public site accents (green leads; red for deadlines and alerts only) */
+  --kcoe-green: #17704a;    /* 6.1:1 */
+  --kcoe-green-tint: #e6f3ec;
+  --kcoe-blue: #1b5aa6;     /* 6.9:1 */
+  --kcoe-blue-tint: #e8f0fa;
+  --kcoe-red: #b3261e;      /* 6.5:1 */
+  --kcoe-red-tint: #fbebea;
+
+  /* Portal accent: royal blue dominates */
+  --portal-primary: #2148c0;       /* 7.6:1 on white; white text on it 7.6:1 */
+  --portal-primary-hover: #1a3a9c;
+  --portal-primary-tint: #e9eefb;
+  --portal-focus: #2148c0;
+
+  /* Semantic states: always paired with an icon and a text label */
+  --state-success: #17704a;
+  --state-warning: #8a5300;
+  --state-error: #b3261e;
+
+  --font-heading: "Newsreader Variable", "Newsreader", Georgia, "Times New Roman", serif;
+  --font-body: "Public Sans Variable", "Public Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  --text-hero: clamp(2.25rem, 1.5rem + 3vw, 3.75rem);
+  --measure: 68ch;
+
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-6: 1.5rem; --space-8: 2rem; --space-12: 3rem; --space-16: 4rem;
+  --radius-sm: 2px; --radius-md: 4px;
+  --duration: 150ms;
+}
+[data-surface="public"] { --accent: var(--kcoe-green); --accent-tint: var(--kcoe-green-tint); --link: var(--kcoe-blue); }
+[data-surface="portal"] { --accent: var(--portal-primary); --accent-tint: var(--portal-primary-tint); --link: var(--portal-primary); }
+
+body { background: var(--kcoe-white); color: var(--kcoe-ink); font-family: var(--font-body); }
+:focus-visible { outline: 3px solid var(--portal-focus); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
