@@ -1,3 +1,4 @@
+import "./load-env";
 import { AsyncLocalStorage } from "node:async_hooks";
 import { Pool, types, type PoolClient, type QueryResultRow } from "pg";
 import { MIGRATIONS } from "./migrations";

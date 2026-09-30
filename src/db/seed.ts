@@ -13,9 +13,12 @@ async function main() {
     console.error("Refusing to seed in production. Set ALLOW_SEED=1 only for a fresh demo database.");
     process.exit(1);
   }
-  const isLocal = /@(localhost|127\.0\.0\.1)[:/]/.test(process.env.DATABASE_URL ?? "");
-  if (!isLocal && process.env.SEED_CONFIRM !== "wipe") {
-    console.error("This seed ERASES the whole database. To run it against a non-local database (for example a disposable Neon branch), set SEED_CONFIRM=wipe.");
+  const url = process.env.DATABASE_URL ?? "";
+  const isLocal = /@(localhost|127\.0\.0\.1)[:/]/.test(url);
+  if (!url) { console.error("DATABASE_URL is not set. Put your Neon connection string in the .env file (see .env.example)."); process.exit(1); }
+  if (!isLocal && !process.argv.includes("--wipe") && process.env.SEED_CONFIRM !== "wipe") {
+    const host = url.replace(/^.*@/, "").replace(/[/?].*$/, "");
+    console.error(`This seed ERASES EVERYTHING in the database at ${host}.\nIf that is a disposable demo database or Neon branch, run:  npm run seed -- --wipe`);
     process.exit(1);
   }
   await pool().query("DROP SCHEMA IF EXISTS public CASCADE; CREATE SCHEMA public;");

@@ -1,7 +1,7 @@
 import { beforeAll, afterAll, describe, expect, it } from "vitest";
 import type { Actor, Role } from "../src/lib/permissions";
 
-process.env.DATABASE_URL = process.env.TEST_DATABASE_URL || "postgres://kcoe:kcoe@localhost:5433/kcoe_test";
+process.env.DATABASE_URL = process.env.TEST_DATABASE_URL || "postgres://kcoe:kcoe@localhost:54329/kcoe_test";
 (process.env as Record<string, string>).NODE_ENV = "test";
 
 let q: typeof import("../src/db");

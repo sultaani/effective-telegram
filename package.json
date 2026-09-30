@@ -18,7 +18,8 @@
     "restore": "node scripts/restore.mjs",
     "smoke:login": "node scripts/login-flow.mjs",
     "migrate": "tsx scripts/migrate.ts",
-    "db:local": "node scripts/local-pg.mjs"
+    "db:local": "node scripts/local-pg.mjs",
+    "db:seed": "tsx src/db/seed.ts"
   },
   "dependencies": {
     "@fontsource-variable/newsreader": "^5.3.0",

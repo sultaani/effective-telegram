@@ -8,18 +8,20 @@ Public website, CMS, and student / staff / administration portals in one Next.js
 2. Set `APP_URL` (https) and a long random `GATEWAY_SECRET` (for example `openssl rand -hex 32`).
 3. `npm ci && npm run build`
 4. `npm run migrate` (creates all tables; also runs automatically on first request, guarded by a Postgres advisory lock).
-5. Create the first administrator: `ADMIN_EMAIL=you@college.edu.ng ADMIN_NAME="Your Name" ADMIN_PASSWORD='a-long-passphrase-1' npm run create-admin`
+5. Create the first administrator (works in PowerShell, cmd, macOS and Linux): `npm run create-admin -- --email you@college.edu.ng --name "Your Name" --password "a-long-passphrase-1"`
 6. `npm start` behind TLS (Vercel, Render, Railway, a VPS with Caddy/nginx, or the included `Dockerfile`). Uploads are stored in Postgres, so the app servers stay stateless and can scale horizontally.
 
-**Demo data.** To try the platform with sample content, create a *separate Neon branch*, point `DATABASE_URL` at it and run `SEED_CONFIRM=wipe npm run seed`. The seed **erases the database**; never run it on production. Demo accounts use `DEMO_PASSWORD` (default `Demo@12345`): `student@`, `lecturer@`, `hod@`, `dean@`, `registrar@`, `bursary@`, `exams@`, `webadmin@`, `editor@`, `ict@`, `super@` `demo.kcoe.test`.
+**Demo data.** To try the platform with sample content, create a *separate Neon branch*, put its connection string in `.env` and run `npm run seed -- --wipe`. The seed **erases the database**; never run it on production. Demo accounts use `DEMO_PASSWORD` (default `Demo@12345`): `student@`, `lecturer@`, `hod@`, `dean@`, `registrar@`, `bursary@`, `exams@`, `webadmin@`, `editor@`, `ict@`, `super@` `demo.kcoe.test`.
 
-## 2. Run locally without Neon
+## 2. Run locally without Neon (optional)
+
+Scripts read `.env` automatically on every platform. If you use Neon you can skip this section.
 
 ```bash
 npm install
 npm rebuild @embedded-postgres/linux-x64 --ignore-scripts=false   # (Linux) links the bundled Postgres libraries; other platforms install their own package automatically
-npm run db:local                # starts a throwaway local Postgres on :5433 (leave running)
-cp .env.example .env            # then set DATABASE_URL=postgres://kcoe:kcoe@localhost:5433/kcoe and GATEWAY_SECRET
+npm run db:local                # starts a throwaway local Postgres on :54329 (leave running; set LOCAL_PG_PORT to change it)
+cp .env.example .env            # then set DATABASE_URL=postgres://kcoe:kcoe@localhost:54329/kcoe and GATEWAY_SECRET
 npm run seed && npm run dev
 ```
 
@@ -56,7 +58,7 @@ Neon provides point-in-time restore and branching; enable it for the production 
 
 ```bash
 npm run db:local                         # in one shell
-TEST_DATABASE_URL=postgres://kcoe:kcoe@localhost:5433/kcoe_test npm test   # 29 unit + service tests (wipes the test DB)
+TEST_DATABASE_URL=postgres://kcoe:kcoe@localhost:54329/kcoe_test npm test   # 29 unit + service tests (wipes the test DB)
 npm run build && npm start               # then:
 npm run smoke -- http://localhost:3000        # 138 route, permission and content checks (needs a seeded database)
 npm run smoke:login -- http://localhost:3000  # real login, cookie flags, lockout

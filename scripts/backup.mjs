@@ -1,5 +1,6 @@
 // Logical backup of every table to gzip-compressed JSON. Complements (does not replace) Neon point-in-time restore.
 // Usage: node scripts/backup.mjs [backupDir] [keep]   (schedule daily; copy the folder off the platform)
+try { process.loadEnvFile(".env"); } catch { /* no .env file: use the environment */ }
 import pg from "pg";
 import fs from "node:fs";
 import path from "node:path";

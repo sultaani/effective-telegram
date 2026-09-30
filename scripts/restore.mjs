@@ -1,5 +1,6 @@
 // Restores a logical backup into a database that already has the schema (run `npm run migrate` first).
 // DESTRUCTIVE: existing rows are removed. Usage: CONFIRM=yes node scripts/restore.mjs backups/<timestamp>
+try { process.loadEnvFile(".env"); } catch { /* no .env file: use the environment */ }
 import pg from "pg";
 import fs from "node:fs";
 import path from "node:path";
