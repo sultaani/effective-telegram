@@ -7,8 +7,8 @@ import { one } from "../db";
 
 export type NavItem = { href: string; label: string; group?: string; exact?: boolean; badge?: number };
 
-export function PortalShell({ title, nav, user, roles, children }: { title: string; nav: NavItem[]; user: { id: number; name: string }; roles: Role[]; children: React.ReactNode }) {
-  const unread = one<{ n: number }>("SELECT COUNT(*) n FROM notifications WHERE user_id=? AND read_at IS NULL", user.id)!.n;
+export async function PortalShell({ title, nav, user, roles, children }: { title: string; nav: NavItem[]; user: { id: number; name: string }; roles: Role[]; children: React.ReactNode }) {
+  const unread = (await one<{ n: number }>("SELECT COUNT(*) n FROM notifications WHERE user_id=? AND read_at IS NULL", user.id))!.n;
   const items = nav.map((n) => (n.href.endsWith("/notifications") ? { ...n, badge: unread } : n));
   const links = (mobile: boolean) => {
     let last = "";

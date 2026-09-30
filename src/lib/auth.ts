@@ -30,50 +30,50 @@ export async function login(email: string, password: string): Promise<{ ok: true
   const ip = await clientIp();
   const generic = "Email or password is incorrect.";
   const e = email.trim().toLowerCase();
-  if (!hit(`ip:${ip}`, 30, 15 * 60 * 1000) || !hit(`email:${e}`, 10, 15 * 60 * 1000)) {
+  if (!(await hit(`ip:${ip}`, 30, 15 * 60 * 1000)) || !(await hit(`email:${e}`, 10, 15 * 60 * 1000))) {
     return { ok: false, error: "Too many attempts. Wait 15 minutes and try again." };
   }
-  const u = one<{ id: number; password_hash: string; is_active: number; failed_logins: number; locked_until: number | null }>(
-    "SELECT id,password_hash,is_active,failed_logins,locked_until FROM users WHERE email=?", e);
+  const u = await one<{ id: number; password_hash: string; is_active: number; failed_logins: number; locked_until: number | null }>(
+    "SELECT id,password_hash,is_active,failed_logins,locked_until FROM users WHERE lower(email)=?", e);
   if (!u) { verifyPassword(password, DUMMY_HASH); return { ok: false, error: generic }; }
   if (u.locked_until && u.locked_until > Date.now()) return { ok: false, error: "This account is temporarily locked. Try again later." };
   const good = verifyPassword(password, u.password_hash);
   if (!good || !u.is_active) {
     const fails = u.failed_logins + 1;
-    run("UPDATE users SET failed_logins=?, locked_until=? WHERE id=?", fails >= MAX_FAILS ? 0 : fails, fails >= MAX_FAILS ? Date.now() + LOCK_MS : null, u.id);
-    audit(u.id, "login.failed", "user", u.id, undefined, ip);
+    await run("UPDATE users SET failed_logins=?, locked_until=? WHERE id=?", fails >= MAX_FAILS ? 0 : fails, fails >= MAX_FAILS ? Date.now() + LOCK_MS : null, u.id);
+    await audit(u.id, "login.failed", "user", u.id, undefined, ip);
     return { ok: false, error: generic };
   }
-  run("UPDATE users SET failed_logins=0, locked_until=NULL WHERE id=?", u.id);
-  reset(`email:${e}`);
+  await run("UPDATE users SET failed_logins=0, locked_until=NULL WHERE id=?", u.id);
+  await reset(`email:${e}`);
   const token = crypto.randomBytes(32).toString("base64url");
   const h = await headers();
-  run("INSERT INTO sessions(token_hash,user_id,expires_at,created_at,ip,user_agent) VALUES(?,?,?,?,?,?)",
+  await run("INSERT INTO sessions(token_hash,user_id,expires_at,created_at,ip,user_agent) VALUES(?,?,?,?,?,?)",
     sha(token), u.id, Date.now() + SESSION_MS, Date.now(), ip, (h.get("user-agent") ?? "").slice(0, 200));
   (await cookies()).set(COOKIE, token, { httpOnly: true, sameSite: "lax", secure: secureCookie(), path: "/", maxAge: SESSION_MS / 1000 });
-  audit(u.id, "login.success", "user", u.id, undefined, ip);
-  const roles = all<{ role: Role }>("SELECT role FROM user_roles WHERE user_id=?", u.id).map((r) => r.role);
+  await audit(u.id, "login.success", "user", u.id, undefined, ip);
+  const roles = (await all<{ role: Role }>("SELECT role FROM user_roles WHERE user_id=?", u.id)).map((r) => r.role);
   return { ok: true, roles };
 }
 
 export async function logout() {
   const c = await cookies();
   const t = c.get(COOKIE)?.value;
-  if (t) run("DELETE FROM sessions WHERE token_hash=?", sha(t));
+  if (t) await run("DELETE FROM sessions WHERE token_hash=?", sha(t));
   c.delete(COOKIE);
 }
 
 export const getSession = cache(async (): Promise<Session | null> => {
   const t = (await cookies()).get(COOKIE)?.value;
   if (!t) return null;
-  const s = one<{ user_id: number; expires_at: number }>("SELECT user_id,expires_at FROM sessions WHERE token_hash=?", sha(t));
+  const s = await one<{ user_id: number; expires_at: number }>("SELECT user_id,expires_at FROM sessions WHERE token_hash=?", sha(t));
   if (!s) return null;
-  if (s.expires_at < Date.now()) { run("DELETE FROM sessions WHERE token_hash=?", sha(t)); return null; }
-  const u = one<SessionUser & { is_active: number }>("SELECT id,email,name,is_active FROM users WHERE id=?", s.user_id);
+  if (s.expires_at < Date.now()) { await run("DELETE FROM sessions WHERE token_hash=?", sha(t)); return null; }
+  const u = await one<SessionUser & { is_active: number }>("SELECT id,email,name,is_active FROM users WHERE id=?", s.user_id);
   if (!u || !u.is_active) return null;
-  const roles = all<{ role: Role }>("SELECT role FROM user_roles WHERE user_id=?", u.id).map((r) => r.role);
-  const staff = one<{ id: number; department_id: number | null }>("SELECT id,department_id FROM staff WHERE user_id=?", u.id);
-  const student = one<{ id: number }>("SELECT id FROM students WHERE user_id=?", u.id);
+  const roles = (await all<{ role: Role }>("SELECT role FROM user_roles WHERE user_id=?", u.id)).map((r) => r.role);
+  const staff = await one<{ id: number; department_id: number | null }>("SELECT id,department_id FROM staff WHERE user_id=?", u.id);
+  const student = await one<{ id: number }>("SELECT id FROM students WHERE user_id=?", u.id);
   return {
     user: { id: u.id, email: u.email, name: u.name },
     actor: { userId: u.id, roles, departmentIds: staff?.department_id ? [staff.department_id] : [], staffId: staff?.id, studentId: student?.id },

@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Result approvals" };
 
 export default async function Page() {
   const s = await requireSession(["HOD", "DEAN"]);
-  const queue = approvalQueue(s.actor, "SUBMITTED");
+  const queue = await approvalQueue(s.actor, "SUBMITTED");
   return (
     <>
       <h1>Result approvals</h1>

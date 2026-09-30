@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Course registrations" };
 
 export default async function Page() {
   await requirePermission("registration:approve");
-  const rows = pendingRegistrations();
+  const rows = await pendingRegistrations();
   return (
     <>
       <h1>Course registrations</h1><p className="muted">Submitted registrations for the current semester.</p>

@@ -6,9 +6,9 @@ export const metadata: Metadata = { title: "Reports" };
 
 export default async function Page() {
   await requirePermission("reports:view");
-  const byProg = all<{ programme: string; level: number; n: number }>("SELECT p.title programme, s.level, COUNT(*) n FROM students s JOIN programmes p ON p.id=s.programme_id GROUP BY p.id, s.level ORDER BY p.title, s.level");
-  const grades = all<{ grade: string; n: number }>("SELECT grade, COUNT(*) n FROM results WHERE status='PUBLISHED' GROUP BY grade ORDER BY grade");
-  const totalStudents = one<{ n: number }>("SELECT COUNT(*) n FROM students")!.n;
+  const byProg = await all<{ programme: string; level: number; n: number }>("SELECT p.title programme, s.level, COUNT(*) n FROM students s JOIN programmes p ON p.id=s.programme_id GROUP BY p.id, s.level ORDER BY p.title, s.level");
+  const grades = await all<{ grade: string; n: number }>("SELECT grade, COUNT(*) n FROM results WHERE status='PUBLISHED' GROUP BY grade ORDER BY grade");
+  const totalStudents = (await one<{ n: number }>("SELECT COUNT(*) n FROM students"))!.n;
   const max = Math.max(1, ...grades.map((g) => g.n));
   return (
     <>

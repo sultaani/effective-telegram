@@ -11,8 +11,8 @@ export const metadata: Metadata = { title: "Fees and receipts" };
 export default async function Page({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const s = await requireSession(["STUDENT"]);
   const sp = await searchParams;
-  const invoices = studentInvoices(s.actor.studentId!);
-  const payments = studentPayments(s.actor.studentId!);
+  const invoices = await studentInvoices(s.actor.studentId!);
+  const payments = await studentPayments(s.actor.studentId!);
   const owed = invoices.reduce((a, i) => a + i.balance_kobo, 0);
   return (
     <>

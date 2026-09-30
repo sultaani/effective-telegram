@@ -63,7 +63,7 @@ export function SemesterForm({ semesters, current }: { semesters: Opt[]; current
   );
 }
 
-export function ContentForm({ item, type }: { item?: { id: number; type: string; title: string; slug: string; summary: string; body: string; audience: string; event_date: string | null; event_location: string | null; seo_description: string | null }; type: string }) {
+export function ContentForm({ item, type }: { item?: { id: number; type: string; title: string; slug: string; summary: string; body: string; audience: string; event_date: string | null; event_location: string | null; seo_description: string | null; image_url: string | null }; type: string }) {
   const t = item?.type ?? type;
   return (
     <ActionForm action={contentAction} submit={item ? "Save changes" : "Create draft"} pendingLabel="Saving…">
@@ -77,6 +77,7 @@ export function ContentForm({ item, type }: { item?: { id: number; type: string;
       <div className="field"><label htmlFor="c-sum">Short summary</label><textarea id="c-sum" name="summary" style={{ minHeight: 70 }} defaultValue={item?.summary} maxLength={400} /><span className="hint">Shown in lists and search results.</span></div>
       <div className="field"><label htmlFor="c-body">Content</label><textarea id="c-body" name="body" style={{ minHeight: 260 }} defaultValue={item?.body} /><span className="hint">Use “## ” for headings, “- ” for lists, and [text](https://link) for links.</span></div>
       {t === "event" && <div className="grid cols-2"><div className="field"><label htmlFor="c-date">Event date</label><input id="c-date" name="event_date" type="date" defaultValue={item?.event_date ?? ""} /></div><div className="field"><label htmlFor="c-loc">Location</label><input id="c-loc" name="event_location" type="text" defaultValue={item?.event_location ?? ""} /></div></div>}
+      {(t === "news" || t === "page" || t === "testimonial") && <div className="field"><label htmlFor="c-img">Image</label><input id="c-img" name="image_url" type="text" defaultValue={item?.image_url ?? ""} placeholder="https://… or leave blank" /><span className="hint">Paste an image address, or upload a JPG or PNG below.</span><input name="image_file" type="file" accept=".png,.jpg,.jpeg" style={{ marginTop: 6 }} /></div>}
       {t === "download" && <div className="field"><label htmlFor="c-file">File (PDF, PNG or JPG, up to 5 MB)</label><input id="c-file" name="file" type="file" accept=".pdf,.png,.jpg,.jpeg" /></div>}
       <div className="field"><label htmlFor="c-seo">Search engine description</label><input id="c-seo" name="seo_description" type="text" maxLength={200} defaultValue={item?.seo_description ?? ""} /></div>
     </ActionForm>

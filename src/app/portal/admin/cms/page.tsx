@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: "Website content" };
 export default async function Page({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   await requirePermission("cms:draft");
   const sp = await searchParams; const type = str(sp.type), status = str(sp.status), q = str(sp.q), page = pageNum(sp.page);
-  const { rows, total, pages } = listAdmin({ type, status, q, page });
+  const { rows, total, pages } = await listAdmin({ type, status, q, page });
   return (
     <>
       <h1>Website content</h1>

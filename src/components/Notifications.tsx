@@ -4,8 +4,8 @@ import { dateTime } from "../lib/format";
 import { markAllRead } from "../app/actions/notifications";
 import { Empty } from "./bits";
 
-export function NotificationList({ userId }: { userId: number }) {
-  const rows = all<{ id: number; title: string; body: string; link: string | null; read_at: number | null; created_at: number }>(
+export async function NotificationList({ userId }: { userId: number }) {
+  const rows = await all<{ id: number; title: string; body: string; link: string | null; read_at: number | null; created_at: number }>(
     "SELECT id,title,body,link,read_at,created_at FROM notifications WHERE user_id=? ORDER BY id DESC LIMIT 50", userId);
   return (
     <>

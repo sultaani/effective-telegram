@@ -4,7 +4,7 @@ import { getSession } from "../../../lib/auth";
 
 /** Public files are served to anyone; private files only to their owner. IDs are 128-bit random, never sequential. */
 export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
-  const f = readFile((await params).id);
+  const f = await readFile((await params).id);
   if (!f) return new NextResponse("Not found", { status: 404 });
   if (f.visibility !== "public") {
     const s = await getSession();

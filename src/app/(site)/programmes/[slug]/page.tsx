@@ -3,18 +3,17 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageHead } from "../../../../components/PageHead";
 import { coursesOfProgramme, getProgramme } from "../../../../services/academics";
-import { Alert } from "../../../../components/bits";
 
 type P = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: P): Promise<Metadata> {
-  const p = getProgramme((await params).slug);
+  const p = await getProgramme((await params).slug);
   return p ? { title: `${p.title} (${p.award})`, description: p.summary, alternates: { canonical: `/programmes/${p.slug}` } } : {};
 }
 
 export default async function Programme({ params }: P) {
-  const p = getProgramme((await params).slug);
+  const p = await getProgramme((await params).slug);
   if (!p) notFound();
-  const courses = coursesOfProgramme(p.id);
+  const courses = await coursesOfProgramme(p.id);
   const ld = { "@context": "https://schema.org", "@type": "EducationalOccupationalProgram", name: p.title, provider: { "@type": "CollegeOrUniversity", name: "Kogi State College of Education, Ankpa" } };
   return (
     <>
@@ -22,7 +21,6 @@ export default async function Programme({ params }: P) {
       <PageHead title={p.title} crumbs={[["Programmes", "/programmes"], [p.title]]} lead={`${p.award} · ${p.duration_years} ${p.duration_years === 1 ? "year" : "years"} · ${p.department}, ${p.school}`} />
       <div className="container section sidebar-layout">
         <div>
-          {p.verification !== "VERIFIED" && <Alert kind="warn" title="Demo content">Programme details are placeholders until the college confirms them.</Alert>}
           <h2>About this programme</h2><p>{p.summary}</p>
           <h2>Entry requirements</h2><p>{p.entry_requirements}</p>
           <h2>Courses</h2>

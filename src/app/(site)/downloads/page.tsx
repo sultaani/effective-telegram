@@ -5,8 +5,8 @@ import { Empty } from "../../../components/bits";
 
 export const metadata: Metadata = { title: "Downloads", alternates: { canonical: "/downloads" } };
 
-export default function Downloads() {
-  const items = listPublished("download");
+export default async function Downloads() {
+  const items = await listPublished("download");
   return (
     <>
       <PageHead title="Downloads" crumbs={[["Downloads"]]} lead="Forms, calendars and public documents." />

@@ -9,7 +9,7 @@ const PATH: Record<string, string> = { page: "", news: "/news", event: "/events"
 
 export default async function Search({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const q = (str((await searchParams).q) ?? "").trim().slice(0, 80);
-  const r = q.length >= 2 ? publicSearch(q) : null;
+  const r = q.length >= 2 ? await publicSearch(q) : null;
   const total = r ? r.content.length + r.programmes.length + r.schools.length : 0;
   return (
     <>

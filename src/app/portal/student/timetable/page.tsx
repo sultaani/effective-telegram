@@ -10,8 +10,8 @@ const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
 export default async function Page() {
   const s = await requireSession(["STUDENT"]);
-  const sem = currentSemester();
-  const rows = sem ? all<{ kind: string; day: string | null; exam_date: string | null; start_time: string; end_time: string; venue: string; code: string; title: string }>(
+  const sem = await currentSemester();
+  const rows = sem ? await all<{ kind: string; day: string | null; exam_date: string | null; start_time: string; end_time: string; venue: string; code: string; title: string }>(
     `SELECT t.kind,t.day,t.exam_date,t.start_time,t.end_time,t.venue,c.code,c.title FROM timetable t JOIN courses c ON c.id=t.course_id
      JOIN registrations r ON r.course_id=c.id AND r.semester_id=t.semester_id AND r.student_id=? AND r.status='APPROVED' WHERE t.semester_id=? ORDER BY t.start_time`, s.actor.studentId, sem.id) : [];
   const cls = rows.filter((r) => r.kind === "CLASS"), exams = rows.filter((r) => r.kind === "EXAM").sort((a, b) => (a.exam_date ?? "").localeCompare(b.exam_date ?? ""));
@@ -31,7 +31,7 @@ export default async function Page() {
         )}</div>
       <div className="panel"><h2>Academic calendar</h2>
         {sem && <ul style={{ margin: 0, paddingLeft: "1.2rem" }}><li>Current: {sem.label}</li><li>Course registration opens: {dateOnly(sem.reg_opens)}</li><li>Course registration closes: {dateOnly(sem.reg_closes)}</li></ul>}
-        <p className="small muted" style={{ marginBottom: 0 }}>Sessions on record: {allSemesters().length} semesters. Demo dates; the college&apos;s official calendar is published under Downloads.</p></div>
+        <p className="small muted" style={{ marginBottom: 0 }}>Sessions on record: {(await allSemesters()).length} semesters. Demo dates; the college&apos;s official calendar is published under Downloads.</p></div>
     </>
   );
 }

@@ -10,8 +10,8 @@ export const metadata: Metadata = { title: "Programmes" };
 
 export default async function Page() {
   await requirePermission("programmes:manage");
-  const rows = listProgrammes({ includeInactive: true });
-  const deps = all<{ id: number; name: string; school: string }>("SELECT d.id,d.name,s.name school FROM departments d JOIN schools s ON s.id=d.school_id ORDER BY s.name,d.name");
+  const rows = await listProgrammes({ includeInactive: true });
+  const deps = await all<{ id: number; name: string; school: string }>("SELECT d.id,d.name,s.name school FROM departments d JOIN schools s ON s.id=d.school_id ORDER BY s.name,d.name");
   return (
     <>
       <h1>Programmes</h1>

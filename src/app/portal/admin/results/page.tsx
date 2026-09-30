@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Results publication" };
 
 export default async function Page() {
   const s = await requirePermission("results:publish");
-  const rows = approvalQueue(s.actor, "HOD_APPROVED");
+  const rows = await approvalQueue(s.actor, "HOD_APPROVED");
   return (
     <>
       <h1>Results publication</h1><p className="muted">Courses approved by the Head of Department. Publishing makes results visible to students and notifies them.</p>

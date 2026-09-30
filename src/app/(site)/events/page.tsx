@@ -5,8 +5,8 @@ import { Empty } from "../../../components/bits";
 
 export const metadata: Metadata = { title: "Events", alternates: { canonical: "/events" } };
 
-export default function Events() {
-  const events = listPublished("event");
+export default async function Events() {
+  const events = await listPublished("event");
   return (
     <>
       <PageHead title="Events" crumbs={[["Events"]]} />

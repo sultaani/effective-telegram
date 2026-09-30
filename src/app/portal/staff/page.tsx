@@ -10,12 +10,12 @@ export const metadata: Metadata = { title: "Staff dashboard" };
 
 export default async function Page() {
   const s = await requireSession(["LECTURER", "HOD", "DEAN"]);
-  const sem = currentSemester();
-  const courses = sem && s.actor.staffId ? assignedCourses(s.actor.staffId, sem.id) : [];
+  const sem = await currentSemester();
+  const courses = sem && s.actor.staffId ? await assignedCourses(s.actor.staffId, sem.id) : [];
   const isApprover = s.actor.roles.some((r) => r === "HOD" || r === "DEAN");
-  const queue = isApprover ? approvalQueue(s.actor, "SUBMITTED") : [];
+  const queue = isApprover ? await approvalQueue(s.actor, "SUBMITTED") : [];
   const needScores = courses.filter((c) => c.students > c.draft + c.submitted);
-  const notices = listPublished("announcement", { limit: 3, audience: "staff" });
+  const notices = await listPublished("announcement", { limit: 3, audience: "staff" });
   return (
     <>
       <h1>Welcome, {s.user.name}</h1>

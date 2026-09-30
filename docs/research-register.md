@@ -18,7 +18,7 @@ Researched 28 Sep 2026. Status: VERIFIED = official source read; UNCONFIRMED = s
 | Established July 1981, Edict No. 20; 185 pioneer students | UNCONFIRMED | Wikipedia only; obtain the college's own history text |
 | ABU affiliation 1982, de-affiliated by NCCE 1993/94 | UNCONFIRMED | Wikipedia only |
 | Current degree-awarding partner | UNCONFIRMED | Not found |
-| Provost: Dr. Fashagba Paul Femi | UNCONFIRMED as current | Kogi State Government release, Jul 2025 |
+| Provost: Dr. Fashagba Paul Femi | UNCONFIRMED as current | Kogi State Government release, Jul 2025. An older college page names Mohammed Kebiru Ibrahim as 13th Provost; news reports say he moved to another college in Apr 2025. The site does not name the Provost: the welcome message is an unsigned placeholder. |
 | Full NCCE accreditation | UNCONFIRMED | Third-party aggregator; check NCCE accredited list |
 | Departments per school, programme list, entry requirements, fees | NOT FOUND | Programme pages returned navigation only; pull from live site or ask the college |
 | Brand colours and crest | NOT FOUND | Use provisional tokens; replace when confirmed |

@@ -22,7 +22,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
     if (!(CONTENT_TYPES as readonly string[]).includes(type)) notFound();
     return <><h1>New {type}</h1><p><Link href="/portal/admin/cms">Back to content</Link></p><div className="panel"><ContentForm type={type} /></div></>;
   }
-  const item = getById(Number(id));
+  const item = await getById(Number(id));
   if (!item) notFound();
   const publisher = can(s.actor, "cms:publish");
   const steps = NEXT[item.status].filter(([to]) => (to === "PUBLISHED" || to === "ARCHIVED" || item.status === "PUBLISHED" ? publisher : true));

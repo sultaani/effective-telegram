@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Results and GPA" };
 
 export default async function Page() {
   const s = await requireSession(["STUDENT"]);
-  const r = studentResults(s.actor.studentId!); // student id comes from the session, never from the URL
+  const r = await studentResults(s.actor.studentId!); // student id comes from the session, never from the URL
   return (
     <>
       <h1>Results and GPA</h1>

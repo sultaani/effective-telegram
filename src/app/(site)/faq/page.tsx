@@ -4,8 +4,8 @@ import { listPublished } from "../../../services/cms";
 
 export const metadata: Metadata = { title: "Frequently asked questions", alternates: { canonical: "/faq" } };
 
-export default function Faq() {
-  const faqs = listPublished("faq");
+export default async function Faq() {
+  const faqs = await listPublished("faq");
   const ld = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.title, acceptedAnswer: { "@type": "Answer", text: f.summary } })) };
   return (
     <>

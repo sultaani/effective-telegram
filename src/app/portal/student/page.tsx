@@ -14,12 +14,12 @@ export const metadata: Metadata = { title: "Student dashboard" };
 export default async function StudentHome() {
   const s = await requireSession(["STUDENT"]);
   const sid = s.actor.studentId!;
-  const st = one<{ matric_no: string; level: number; programme: string }>("SELECT s.matric_no,s.level,p.title programme FROM students s JOIN programmes p ON p.id=s.programme_id WHERE s.id=?", sid)!;
-  const reg = registrationView(sid);
-  const owed = outstanding(sid);
-  const res = studentResults(sid);
-  const notes = all<{ id: number; title: string; created_at: number }>("SELECT id,title,created_at FROM notifications WHERE user_id=? AND read_at IS NULL ORDER BY id DESC LIMIT 4", s.user.id);
-  const notices = listPublished("announcement", { limit: 3, audience: "students" });
+  const st = (await one<{ matric_no: string; level: number; programme: string }>("SELECT s.matric_no,s.level,p.title programme FROM students s JOIN programmes p ON p.id=s.programme_id WHERE s.id=?", sid))!;
+  const reg = await registrationView(sid);
+  const owed = await outstanding(sid);
+  const res = await studentResults(sid);
+  const notes = await all<{ id: number; title: string; created_at: number }>("SELECT id,title,created_at FROM notifications WHERE user_id=? AND read_at IS NULL ORDER BY id DESC LIMIT 4", s.user.id);
+  const notices = await listPublished("announcement", { limit: 3, audience: "students" });
   const todo: React.ReactNode[] = [];
   if (reg && reg.status === "NOT_STARTED" || reg?.status === "DRAFT") todo.push(<li key="r"><Link href="/portal/student/registration">Register your courses</Link>{reg.open ? "" : " (registration is closed)"}</li>);
   if (reg?.status === "REJECTED") todo.push(<li key="rr"><Link href="/portal/student/registration">Your registration was returned. Review and resubmit.</Link></li>);

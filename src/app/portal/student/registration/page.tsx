@@ -10,9 +10,9 @@ export const metadata: Metadata = { title: "Course registration" };
 
 export default async function Page() {
   const s = await requireSession(["STUDENT"]);
-  const v = registrationView(s.actor.studentId!);
+  const v = await registrationView(s.actor.studentId!);
   if (!v) return <><h1>Course registration</h1><Empty title="No active semester">Registration opens when the Registrar sets the current semester.</Empty></>;
-  const saved = !!one("SELECT 1 FROM registrations WHERE student_id=? AND semester_id=?", s.actor.studentId, v.semester.id);
+  const saved = !!await one("SELECT 1 FROM registrations WHERE student_id=? AND semester_id=?", s.actor.studentId, v.semester.id);
   const locked = !v.open || v.status === "SUBMITTED" || v.status === "APPROVED";
   return (
     <>

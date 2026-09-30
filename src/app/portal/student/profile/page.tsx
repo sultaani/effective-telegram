@@ -6,9 +6,9 @@ export const metadata: Metadata = { title: "Profile" };
 
 export default async function Page() {
   const s = await requireSession(["STUDENT"]);
-  const p = one<{ matric_no: string; level: number; programme: string; department: string; school: string; entry: string }>(
+  const p = (await one<{ matric_no: string; level: number; programme: string; department: string; school: string; entry: string }>(
     `SELECT s.matric_no,s.level,p.title programme,d.name department,sc.name school,a.label entry FROM students s JOIN programmes p ON p.id=s.programme_id
-     JOIN departments d ON d.id=p.department_id JOIN schools sc ON sc.id=d.school_id JOIN academic_sessions a ON a.id=s.entry_session_id WHERE s.id=?`, s.actor.studentId)!;
+     JOIN departments d ON d.id=p.department_id JOIN schools sc ON sc.id=d.school_id JOIN academic_sessions a ON a.id=s.entry_session_id WHERE s.id=?`, s.actor.studentId))!;
   const rows: [string, string][] = [["Name", s.user.name], ["Email", s.user.email], ["Matriculation number", p.matric_no], ["Programme", p.programme], ["Department", p.department], ["School", p.school], ["Current level", `${p.level} level`], ["Entry session", p.entry]];
   return (
     <>

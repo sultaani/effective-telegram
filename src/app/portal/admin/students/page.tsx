@@ -10,13 +10,13 @@ export const metadata: Metadata = { title: "Students" };
 export default async function Page({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   await requirePermission("students:read");
   const sp = await searchParams; const q = str(sp.q), programme = Number(str(sp.programme)) || undefined, level = Number(str(sp.level)) || undefined, page = pageNum(sp.page);
-  const { rows, total, pages } = listStudents({ q, programme, level, page });
+  const { rows, total, pages } = await listStudents({ q, programme, level, page });
   const qs = new URLSearchParams(Object.entries({ q, programme: programme?.toString(), level: level?.toString() }).filter(([, v]) => v) as [string, string][]).toString();
   return (
     <>
       <div className="row between"><h1>Students</h1><Link className="btn secondary small" href={`/portal/admin/export/students?${qs}`}>Export CSV</Link></div>
       <form className="filters" role="search"><div className="field"><label htmlFor="q">Search name or matric number</label><input id="q" name="q" type="search" defaultValue={q} /></div>
-        <div className="field"><label htmlFor="programme">Programme</label><select id="programme" name="programme" defaultValue={programme ?? ""}><option value="">All</option>{listProgrammes({ includeInactive: true }).map((p) => <option key={p.id} value={p.id}>{p.title}</option>)}</select></div>
+        <div className="field"><label htmlFor="programme">Programme</label><select id="programme" name="programme" defaultValue={programme ?? ""}><option value="">All</option>{(await listProgrammes({ includeInactive: true })).map((p) => <option key={p.id} value={p.id}>{p.title}</option>)}</select></div>
         <div className="field"><label htmlFor="level">Level</label><select id="level" name="level" defaultValue={level ?? ""}><option value="">All</option><option>100</option><option>200</option><option>300</option></select></div>
         <button className="btn">Filter</button></form>
       <p className="muted" aria-live="polite">{total} students</p>

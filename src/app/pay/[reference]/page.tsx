@@ -11,7 +11,7 @@ export const metadata: Metadata = { title: "Demo payment gateway", robots: { ind
 /** Stands in for a hosted gateway checkout page. A real gateway replaces this page and calls the webhook itself. */
 export default async function DemoPay({ params }: { params: Promise<{ reference: string }> }) {
   const s = await requireSession(["STUDENT"]);
-  const p = paymentByReference((await params).reference);
+  const p = await paymentByReference((await params).reference);
   if (!p || p.student_id !== s.actor.studentId) notFound();
   const done = p.status !== "PENDING";
   return (

@@ -10,8 +10,8 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
   await requirePermission("audit:read");
   const sp = await searchParams; const q = str(sp.q), page = pageNum(sp.page);
   const like = q ? `%${q.replace(/[\\%_]/g, "\\$&")}%` : "%";
-  const total = one<{ n: number }>("SELECT COUNT(*) n FROM audit_log WHERE action LIKE ? ESCAPE '\\' OR entity LIKE ? ESCAPE '\\'", like, like)!.n;
-  const rows = all<{ id: number; action: string; entity: string; entity_id: string | null; detail: string | null; actor: string | null; created_at: number; ip: string | null }>(
+  const total = (await one<{ n: number }>("SELECT COUNT(*) n FROM audit_log WHERE action LIKE ? ESCAPE '\\' OR entity LIKE ? ESCAPE '\\'", like, like))!.n;
+  const rows = await all<{ id: number; action: string; entity: string; entity_id: string | null; detail: string | null; actor: string | null; created_at: number; ip: string | null }>(
     `SELECT a.id,a.action,a.entity,a.entity_id,a.detail,a.ip,a.created_at,u.name actor FROM audit_log a LEFT JOIN users u ON u.id=a.actor_id
      WHERE a.action LIKE ? ESCAPE '\\' OR a.entity LIKE ? ESCAPE '\\' ORDER BY a.id DESC LIMIT 25 OFFSET ?`, like, like, (page - 1) * 25);
   return (

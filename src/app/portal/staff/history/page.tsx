@@ -7,11 +7,11 @@ export const metadata: Metadata = { title: "Result history" };
 
 export default async function Page() {
   const s = await requireSession(["LECTURER", "HOD", "DEAN"]);
-  const rows = s.actor.staffId ? all<{ label: string; code: string; title: string; n: number; status: string; avg: number }>(
-    `SELECT a.label || ' · ' || CASE sm.number WHEN 1 THEN 'First' ELSE 'Second' END || ' semester' label, c.code, c.title, COUNT(*) n, x.status, ROUND(AVG(x.total),1) avg
+  const rows = s.actor.staffId ? await all<{ label: string; code: string; title: string; n: number; status: string; avg: number }>(
+    `SELECT a.label || ' · ' || CASE sm.number WHEN 1 THEN 'First' ELSE 'Second' END || ' semester' label, c.code, c.title, COUNT(*) n, x.status, ROUND(AVG(x.total)::numeric,1) avg
      FROM allocations al JOIN courses c ON c.id=al.course_id JOIN semesters sm ON sm.id=al.semester_id JOIN academic_sessions a ON a.id=sm.session_id
      JOIN registrations r ON r.course_id=c.id AND r.semester_id=sm.id JOIN results x ON x.registration_id=r.id
-     WHERE al.staff_id=? GROUP BY sm.id, c.id, x.status ORDER BY a.label DESC, sm.number DESC, c.code`, s.actor.staffId) : [];
+     WHERE al.staff_id=? GROUP BY sm.id, sm.number, a.label, c.id, c.code, c.title, x.status ORDER BY a.label DESC, sm.number DESC, c.code`, s.actor.staffId) : [];
   return (
     <>
       <h1>Result history</h1>

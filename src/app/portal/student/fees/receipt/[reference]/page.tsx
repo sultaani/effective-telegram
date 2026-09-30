@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Payment receipt", robots: { index: f
 
 export default async function Page({ params }: { params: Promise<{ reference: string }> }) {
   const s = await requireSession(["STUDENT"]);
-  const r = receipt(s.actor.studentId!, (await params).reference); // scoped to the signed-in student
+  const r = await receipt(s.actor.studentId!, (await params).reference); // scoped to the signed-in student
   if (!r) notFound();
   return (
     <div className="panel" style={{ maxWidth: 640 }}>

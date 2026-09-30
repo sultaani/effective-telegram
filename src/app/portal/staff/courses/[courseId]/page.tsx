@@ -13,11 +13,11 @@ export const metadata: Metadata = { title: "Class list and scores" };
 export default async function Page({ params }: { params: Promise<{ courseId: string }> }) {
   const s = await requireSession(["LECTURER", "HOD"]);
   const id = Number((await params).courseId);
-  const sem = currentSemester();
+  const sem = await currentSemester();
   if (!Number.isInteger(id) || !sem) notFound();
-  const rows = classList(s.actor, id, sem.id); // null unless the signed-in lecturer is allocated this course
+  const rows = await classList(s.actor, id, sem.id); // null unless the signed-in lecturer is allocated this course
   if (!rows) notFound();
-  const c = one<{ code: string; title: string; level: number; units: number }>("SELECT code,title,level,units FROM courses WHERE id=?", id)!;
+  const c = (await one<{ code: string; title: string; level: number; units: number }>("SELECT code,title,level,units FROM courses WHERE id=?", id))!;
   return (
     <>
       <h1>{c.code} {c.title}</h1>

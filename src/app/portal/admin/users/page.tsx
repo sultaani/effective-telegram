@@ -11,7 +11,7 @@ export const metadata: Metadata = { title: "Users" };
 export default async function Page({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const s = await requirePermission("users:manage");
   const sp = await searchParams; const q = str(sp.q), role = str(sp.role), page = pageNum(sp.page);
-  const { rows, total, pages } = listUsers({ q, role, page });
+  const { rows, total, pages } = await listUsers({ q, role, page });
   const priv = s.actor.roles.includes("SUPER_ADMIN");
   return (
     <>

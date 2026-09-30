@@ -6,14 +6,14 @@ import { getSchool, departmentsOf, listProgrammes } from "../../../../services/a
 
 type P = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: P): Promise<Metadata> {
-  const s = getSchool((await params).slug);
+  const s = await getSchool((await params).slug);
   return s ? { title: s.name, description: s.summary, alternates: { canonical: `/schools/${s.slug}` } } : {};
 }
 
 export default async function School({ params }: P) {
-  const s = getSchool((await params).slug);
+  const s = await getSchool((await params).slug);
   if (!s) notFound();
-  const progs = listProgrammes({ school: s.slug });
+  const progs = await listProgrammes({ school: s.slug });
   return (
     <>
       <PageHead title={s.name} crumbs={[["Schools", "/schools"], [s.name]]} lead={s.summary} />
@@ -24,7 +24,7 @@ export default async function School({ params }: P) {
             <Link key={p.id} className="item" href={`/programmes/${p.slug}`}><h3>{p.title}</h3><span className="meta">{p.award} · {p.duration_years} {p.duration_years === 1 ? "year" : "years"} · {p.department}</span></Link>
           ))}
         </div>
-        <aside><h2>Departments</h2><ul>{departmentsOf(s.id).map((d) => <li key={d.id}>{d.name}</li>)}</ul></aside>
+        <aside><h2>Departments</h2><ul>{(await departmentsOf(s.id)).map((d) => <li key={d.id}>{d.name}</li>)}</ul></aside>
       </div>
     </>
   );

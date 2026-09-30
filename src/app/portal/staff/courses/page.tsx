@@ -9,8 +9,8 @@ export const metadata: Metadata = { title: "My courses" };
 
 export default async function Page() {
   const s = await requireSession(["LECTURER", "HOD", "DEAN"]);
-  const sem = currentSemester();
-  const courses = sem && s.actor.staffId ? assignedCourses(s.actor.staffId, sem.id) : [];
+  const sem = await currentSemester();
+  const courses = sem && s.actor.staffId ? await assignedCourses(s.actor.staffId, sem.id) : [];
   return (
     <>
       <h1>My courses and scores</h1><p className="muted">{sem?.label}</p>

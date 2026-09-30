@@ -8,8 +8,8 @@ export const metadata: Metadata = { title: "Registered courses" };
 
 export default async function Page() {
   const s = await requireSession(["STUDENT"]);
-  const sem = currentSemester();
-  const rows = sem ? all<{ code: string; title: string; units: number; status: string; lecturer: string | null }>(
+  const sem = await currentSemester();
+  const rows = sem ? await all<{ code: string; title: string; units: number; status: string; lecturer: string | null }>(
     `SELECT c.code,c.title,c.units,r.status,
       (SELECT st.display_name FROM allocations a JOIN staff st ON st.id=a.staff_id WHERE a.course_id=c.id AND a.semester_id=r.semester_id LIMIT 1) lecturer
      FROM registrations r JOIN courses c ON c.id=r.course_id WHERE r.student_id=? AND r.semester_id=? ORDER BY c.code`, s.actor.studentId, sem.id) : [];
