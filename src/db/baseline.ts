@@ -1,0 +1,93 @@
+/**
+ * Baseline site content, applied by migration 2 to EVERY database (empty, seeded or production).
+ * Without it the navigation, footer links, schools and home-page sections would be empty or return 404 on a fresh database.
+ * Idempotent (ON CONFLICT DO NOTHING): it never overwrites anything staff have edited. All of it is editable in the CMS.
+ */
+import { PHOTO } from "../lib/images";
+
+export type Q = (sql: string, params?: unknown[]) => Promise<unknown>;
+
+const SCHOOLS: [string, string, string][] = [
+  ["arts-and-social-sciences", "School of Arts and Social Sciences", "Arts, humanities and social science subjects for prospective teachers."],
+  ["education", "School of Education", "Professional education, early childhood care and guidance and counselling."],
+  ["languages", "School of Languages", "English, French and Nigerian languages for teacher training."],
+  ["science-education", "School of Science Education", "Sciences and mathematics for teacher training."],
+  ["vocation-and-technical-education", "School of Vocation and Technical Education", "Vocational, technical and skills-based teacher training."],
+];
+
+type PageDef = [slug: string, title: string, summary: string, body: string, image?: string];
+const PAGES: PageDef[] = [
+  ["about", "About the college", "Kogi State College of Education, Ankpa is a public teacher-training institution in Kogi State, Nigeria.",
+    "## Who we are\n\nKogi State College of Education, Ankpa is a public higher institution owned by the Kogi State Government. It trains teachers for the basic and junior secondary levels and awards the Nigeria Certificate in Education (NCE).\n\n## Five schools\n\nThe college is organised into five schools: Arts and Social Sciences, Education, Languages, Science Education, and Vocation and Technical Education. Each school groups related departments and programmes.\n\n## Where to go next\n\n- [Vision and mission](/vision-and-mission)\n- [History and traditions](/history-and-traditions)\n- [Programmes](/programmes)\n- [How to apply](/how-to-apply)", PHOTO.campusAerial],
+  ["provost-welcome", "The Provost's welcome", "Welcome to Kogi State College of Education, Ankpa. We prepare teachers who are grounded in their subjects, skilled in the classroom and committed to their communities.",
+    "## A welcome to new and returning students\n\nWelcome to Kogi State College of Education, Ankpa. We prepare teachers who are grounded in their subjects, skilled in the classroom and committed to their communities.\n\nOur schools, lecturers and staff are here to support you from admission to graduation. Use the student portal to register your courses, follow your results and settle your fees, and use the support pages whenever you need help.\n\nI invite you to explore the college, to take full advantage of what it offers, and to join us in building strong classrooms for Kogi State and Nigeria.\n\n**The Provost**", PHOTO.graduate],
+  ["vision-and-mission", "Vision and mission", "What the college is working towards.", "## Vision\n\nTo be a leading centre for teacher education in Nigeria, producing teachers who raise standards in every classroom they enter.\n\n## Mission\n\nTo train competent, disciplined and innovative teachers through quality instruction, supervised teaching practice, research and service to the community.\n\n## Core values\n\n- Integrity and discipline\n- Excellence in teaching and learning\n- Respect and service\n- Innovation and lifelong learning"],
+  ["history-and-traditions", "Our history and traditions", "How the college grew in Ankpa.", "## A teacher-training college in Ankpa\n\nKogi State College of Education is a public higher teachers-training institution situated in Ankpa, a major town in the east of Kogi State.\n\nOver the years the college has expanded its schools and programmes and introduced a degree programme unit alongside its NCE programmes.", PHOTO.walkway],
+  ["governing-council", "Governing Council", "The body that oversees the policies of the college.", "The Governing Council provides oversight and policy direction for the college on behalf of the Kogi State Government. Council membership and terms of reference are published here by the Registry."],
+  ["our-location", "Our location", "Where to find the college.", "## Ankpa, Kogi State\n\nThe college is in Ankpa, a major town in the east of Kogi State, Nigeria. Prospective students and visitors can reach the Registry and the Admissions Office during normal working hours.\n\n## Getting here\n\nAnkpa is served by road from Anyigba, Idah, Dekina and other towns in Kogi East.", PHOTO.hill],
+  ["ankpa-at-a-glance", "Ankpa at a glance", "About the town that hosts the college.", "Ankpa is a major town in the east of Kogi State. It is a local government headquarters and a commercial and farming centre for the surrounding communities."],
+  ["academic-calendar", "Academic calendar", "Key dates for the session.", "## Sessions and semesters\n\nThe academic year is made up of two semesters. Registration windows, lectures, examinations and breaks are published by the Registry at the start of each session. Sign in to the student portal to see the current semester and your own timetable."],
+  ["library", "College library", "Books, journals and study space.", "The college library supports teaching, learning and research with print and electronic resources and quiet study space. Opening hours are extended during examinations.", PHOTO.library],
+  ["admissions", "Admissions", "How to apply to Kogi State College of Education, Ankpa.", "## How to apply\n\n- Choose a programme and check its entry requirements.\n- Watch this website for the admission notice.\n- Complete the online application and upload the documents requested.\n- Follow the admission list and screening instructions.\n\n## Entry requirements\n\nCandidates need the required O-level credits for their chosen combination, normally including English Language and Mathematics. See each [programme page](/programmes) for details.\n\n## Need help?\n\nContact the Admissions Office through the [contact page](/contact) or read the [frequently asked questions](/faq).", PHOTO.classroom],
+  ["how-to-apply", "How to apply", "Step by step from choosing a programme to admission.", "## Before you apply\n\nRead the entry requirements for your programme and prepare your credentials.\n\n## Applying\n\n1. Choose your programme.\n2. Complete the application form when the admission notice is published.\n3. Upload the documents requested.\n4. Attend screening if you are invited.\n\n## After admission\n\nAccept your offer, pay your fees through the portal, then register your courses."],
+  ["nce-programmes", "NCE programmes", "The Nigeria Certificate in Education.", "The NCE is the college's core programme, preparing teachers for basic and junior secondary schools. Browse the [full programme list](/programmes) to see subject combinations, entry requirements and course lists.", PHOTO.pupils],
+  ["degree-programme", "Degree programme", "Degree studies for teachers.", "The college runs a degree programme unit. Degree courses, partner arrangements and entry requirements are published here by the unit."],
+  ["pde-programme", "Post-Degree Diploma", "Professional teaching qualification for graduates.", "The Post-Degree Diploma in Education is for graduates who wish to qualify as teachers. Browse the [programme list](/programmes) for details."],
+  ["student-affairs", "Student Affairs", "Support for student life and welfare.", "Student Affairs supports orientation, welfare, clubs and societies, and student discipline. Contact the office through the [contact page](/contact)."],
+  ["health-services", "Health services", "Care for students and staff.", "The college health service provides first-line care for students and staff. Report emergencies to the security post or the health centre."],
+  ["sports", "Sports and recreation", "Keeping active on campus.", "Sports and recreation activities are coordinated through Student Affairs. Announcements about competitions and trials appear in [news](/news) and [events](/events)."],
+  ["research-and-publications", "Research and publications", "Scholarship at the college.", "Lecturers and students carry out research in education, the sciences, the arts and vocational studies. Publications and conference outputs are listed here as they are approved."],
+  ["centres-and-units", "Centres and units", "Specialised units of the college.", "The college hosts units that support teaching and research, including the ICT Directorate and the Degree Programme Unit."],
+  ["teaching-practice", "Teaching practice", "Supervised classroom experience.", "Teaching practice places students in schools under supervision so they can apply what they learn. Postings are announced through the student portal.", PHOTO.teacher],
+  ["facilities", "Facilities", "Lecture halls, library and ICT.", "Campus facilities include lecture halls, laboratories, the library and ICT resources for students and staff.", PHOTO.brick],
+  ["tetfund-high-impact", "TETFund high impact intervention", "Special intervention projects.", "Information on projects supported through the Tertiary Education Trust Fund (TETFund) special interventions is published here by the TETFund desk."],
+  ["tetfund-institution-based-research", "TETFund institution-based research", "Annual research intervention.", "Guidelines, calls and outputs for institution-based research supported by TETFund are published here."],
+  ["tetfund-infrastructure", "TETFund physical infrastructure and programme upgrade", "Annual infrastructure intervention.", "Projects supported by TETFund for physical infrastructure and programme upgrades are listed here."],
+  ["bursary", "Bursary", "Fees, payments and receipts.", "The Bursary manages fees, payments and receipts. Students can pay through the student portal and download receipts instantly."],
+  ["registry", "Registry", "Academic records and administration.", "The Registry keeps student records, coordinates admissions and examinations, and supports the Governing Council and Senate."],
+  ["ict-directorate", "ICT Directorate", "Support for online systems.", "The ICT Directorate runs the college website, the student and staff portals and campus networks. For portal help, sign in and open Support."],
+  ["works-and-maintenance", "Works and maintenance", "Keeping the campus in good order.", "Works and Maintenance looks after buildings, water, power and grounds."],
+  ["security", "Security", "Safety on campus.", "The security unit protects people and property on campus. Report incidents immediately to the nearest security post."],
+  ["servicom", "Servicom", "Service charter and feedback.", "Servicom helps the college keep its service promises. Send compliments, complaints and suggestions through the [contact page](/contact)."],
+  ["contact", "Contact us", "How to reach the college.", "## Address\n\nKogi State College of Education, Ankpa, Ankpa, Kogi State, Nigeria.\n\n## Email\n\ninfo@kscoeankpa.edu.ng\n\n## Offices\n\nRegistry, Admissions, Bursary and ICT are open on working days. For portal problems, sign in and use Support."],
+  ["accessibility", "Accessibility", "Our commitment to an accessible website.", "We aim to make this website usable by everyone. If you have trouble using any page, tell us through the [contact page](/contact)."],
+  ["terms", "Terms and conditions", "Terms of use for this website.", "By using this website you agree to use it lawfully and not to attempt to gain unauthorised access to portal accounts or data."],
+  ["privacy", "Privacy", "How we handle personal information.", "The college collects only the information needed to admit, teach and support students. Portal data is protected by access controls and is not sold or shared for marketing."],
+];
+
+const FAQS: [string, string][] = [
+  ["How do I find my matriculation number?", "Your matriculation number is on your admission letter and on your portal profile after your first sign-in."],
+  ["How do I register my courses?", "Sign in to the student portal, open Course registration, choose your electives and submit. The Registrar's office approves your registration."],
+  ["What if my payment shows as pending?", "Payments are confirmed by the payment provider, which can take a few minutes. If it stays pending, open Support and share your reference."],
+  ["Who do I contact about my results?", "Contact your Head of Department first. Results appear in the portal only after the Examinations Office publishes them."],
+];
+
+export async function applyBaseline(q: Q): Promise<void> {
+  const now = Date.now(), day = 86400000;
+  for (const [slug, name, summary] of SCHOOLS)
+    await q("INSERT INTO schools(slug,name,summary,verification) VALUES($1,$2,$3,'VERIFIED') ON CONFLICT(slug) DO NOTHING", [slug, name, summary]);
+
+  const put = (type: string, slug: string, title: string, summary: string, body: string, o: { image?: string; ago?: number; date?: string; loc?: string; audience?: string; status?: string } = {}) => {
+    const t = now - (o.ago ?? 0) * day, status = o.status ?? "PUBLISHED";
+    return q(`INSERT INTO content_items(type,slug,title,summary,body,status,verification,audience,event_date,event_location,image_url,created_at,updated_at,published_at)
+      VALUES($1,$2,$3,$4,$5,$6,'SAMPLE',$7,$8,$9,$10,$11,$11,$12) ON CONFLICT(type,slug) DO NOTHING`,
+      [type, slug, title, summary, body, status, o.audience ?? "public", o.date ?? null, o.loc ?? null, o.image ?? null, t, status === "PUBLISHED" ? t : null]);
+  };
+  for (const [slug, title, summary, body, image] of PAGES) await put("page", slug, title, summary, body, { image });
+  for (const [i, [qn, a]] of FAQS.entries()) await put("faq", `faq-${i + 1}`, qn, a, a);
+
+  await put("news", "admission-applications-open", "2025/2026 admission applications open", "Applications for NCE programmes are now open. Read the entry requirements and apply.", "Applications for NCE programmes are open.\n\n## What to do\n\n- Read the entry requirements for your programme.\n- Prepare your documents.\n- Apply before the closing date shown in the admission notice.", { image: PHOTO.classroom, ago: 2 });
+  await put("news", "orientation-week-for-new-students", "Orientation week for new students", "New students are welcomed with a week of talks, tours and registration help.", "Orientation week introduces new students to the college, the schools, the library and the student portal.", { image: PHOTO.benchLaptops, ago: 6 });
+  await put("news", "library-hours-during-examinations", "Extended library hours during examinations", "The library opens longer during examination weeks.", "The library will open for longer hours during examinations so students have more time to study.", { image: PHOTO.library, ago: 12 });
+  await put("news", "teaching-practice-postings-released", "Teaching practice postings released", "Students on teaching practice can now check their postings in the portal.", "Postings for teaching practice have been released. Sign in to the student portal to see your school and supervisor.", { image: PHOTO.teacher, ago: 20 });
+  await put("announcement", "course-registration-closes-soon", "Course registration closes soon", "Register your courses in the student portal before the deadline.", "Sign in to the student portal and complete course registration before it closes.", { ago: 1 });
+  await put("announcement", "fee-payment-reminder", "Fee payment reminder", "Pay outstanding fees in the portal to receive your receipt instantly.", "Payments are confirmed automatically. Keep your receipt.", { ago: 3 });
+  const inDays = (n: number) => new Date(now + n * day).toISOString().slice(0, 10);
+  await put("event", "matriculation-ceremony", "Matriculation ceremony", "Ceremony for newly admitted students.", "Matriculation ceremony.", { date: inDays(14), loc: "Main Auditorium" });
+  await put("event", "prospective-students-open-day", "Prospective students open day", "Meet departments and ask questions.", "Open day.", { date: inDays(30), loc: "Campus" });
+  await put("event", "convocation-lecture", "Convocation lecture", "Annual public lecture.", "Convocation lecture.", { date: inDays(60), loc: "Main Auditorium" });
+  await put("download", "academic-calendar-download", "Academic calendar", "Upload the official calendar in the CMS.", "No file has been uploaded to this entry yet.");
+  await put("testimonial", "student-amina", "Amina Y.", "The lecturers make time for you, and teaching practice gave me the confidence to stand in front of a class.", "NCE Biology / Chemistry", { image: PHOTO.portraitWoman });
+  await put("testimonial", "student-musa", "Musa A.", "Registering my courses and paying my fees online saved me many trips to the office.", "NCE Mathematics / Physics", { image: PHOTO.portraitMan });
+  await put("testimonial", "student-blessing", "Blessing A.", "The library and the study groups helped me keep up, and I found friends for life.", "NCE English / History", { image: PHOTO.laptopMan });
+}

@@ -41,6 +41,18 @@ ok(!s.text.includes("<script>alert(1)</script>"), "search reflects input safely"
 ok((await get("/programmes?q=%25")).status === 200, "wildcard search safe");
 ok(!(await get("/sitemap.xml")).text.includes("draft-hostel-allocation"), "sitemap excludes drafts");
 
+// --- Crawl every internal link on the home page (nav dropdowns + footer) and require a working page
+{
+  const html = (await get("/")).text;
+  const links = [...new Set([...html.matchAll(/href="(\/[^"#?]*)"/g)].map((m) => m[1]))].filter((l) => !l.startsWith("/_next") && !l.startsWith("/files/"));
+  ok(links.length > 40, `home exposes ${links.length} internal links (nav panels are in the page)`);
+  for (const l of links) {
+    const r = await get(l);
+    ok(r.status === 200 || (l.startsWith("/portal") && r.status === 307), `link ${l} -> ${r.status}`);
+  }
+  ok(/class="mn-panel"[^>]*hidden/.test(html), "closed dropdown panels carry the hidden attribute");
+}
+
 // --- Unauthenticated access
 for (const p of ["/portal/student", "/portal/staff", "/portal/admin", "/portal/admin/users", "/portal/student/results"]) {
   const r = await get(p); ok(r.status === 307 && r.loc?.includes("/portal/login"), `${p} redirects to login (${r.status})`);

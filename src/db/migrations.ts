@@ -1,5 +1,7 @@
 /** Ordered, append-only PostgreSQL migrations. Never edit an applied migration; add a new one. */
-export const MIGRATIONS: { id: number; name: string; sql: string }[] = [
+import { applyBaseline, type Q } from "./baseline";
+
+export const MIGRATIONS: { id: number; name: string; sql?: string; up?: (q: Q) => Promise<void> }[] = [
   {
     id: 1,
     name: "initial",
@@ -76,4 +78,5 @@ CREATE TABLE audit_log(id SERIAL PRIMARY KEY, actor_id INTEGER, action TEXT NOT 
 CREATE INDEX idx_audit_time ON audit_log(created_at);
 `,
   },
+  { id: 2, name: "baseline-site-content", up: applyBaseline },
 ];

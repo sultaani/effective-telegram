@@ -19,6 +19,7 @@
 .mn-item { position: static; }
 .sitehead .container.sitehead-row { position: relative; }
 .mn-panel { position: absolute; left: 0; right: 0; top: 100%; background: var(--kcoe-white); border: 1px solid var(--kcoe-border); border-top: 3px solid var(--kcoe-green); box-shadow: 0 18px 30px -18px rgba(26,36,51,.35); padding: var(--space-6) var(--space-8); display: flex; gap: var(--space-12); flex-wrap: wrap; z-index: 50; }
+.mn-panel[hidden] { display: none; } /* author display:flex would otherwise override the hidden attribute */
 .mn-col { min-width: 220px; flex: 1 1 220px; max-width: 360px; }
 .mn-col ul { list-style: none; margin: 0; padding: 0; }
 .mn-heading { font: 700 0.75rem var(--font-body); letter-spacing: .1em; text-transform: uppercase; color: var(--kcoe-muted); margin: 0 0 var(--space-2); }

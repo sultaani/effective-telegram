@@ -91,13 +91,14 @@ export default async function Home() {
       <section className="section alt" aria-labelledby="schools-h">
         <div className="container">
           <div className="section-head"><div><p className="kicker">Academics</p><h2 id="schools-h">Our schools</h2></div><Link className="arrowlink" href="/schools">All schools</Link></div>
-          <div className="tiles">{schools.map((s) => <Link key={s.id} className="tile" href={`/schools/${s.slug}`}><h3>{s.name}</h3><p>{s.summary}</p></Link>)}</div>
+          {schools.length === 0 ? <p className="muted">Schools will be listed here once they are added.</p> : <div className="tiles">{schools.map((s) => <Link key={s.id} className="tile" href={`/schools/${s.slug}`}><h3>{s.name}</h3><p>{s.summary}</p></Link>)}</div>}
         </div>
       </section>
 
       <section className="section" aria-labelledby="news-h">
         <div className="container">
           <div className="section-head"><div><p className="kicker">News</p><h2 id="news-h">Latest news</h2></div><Link className="arrowlink" href="/news">View all news</Link></div>
+          {news.length === 0 && <p className="muted">No news has been published yet.</p>}
           <div className="newsgrid">
             {news.map((n, i) => (
               <Link key={n.id} href={`/news/${n.slug}`} className="ncard">

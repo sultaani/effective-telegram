@@ -7,11 +7,11 @@ Public website, CMS, and student / staff / administration portals in one Next.js
 1. Create a Neon project. In **Connect**, copy the *pooled* connection string into `DATABASE_URL` and the *direct* one into `DATABASE_URL_UNPOOLED` (see `.env.example`).
 2. Set `APP_URL` (https) and a long random `GATEWAY_SECRET` (for example `openssl rand -hex 32`).
 3. `npm ci && npm run build`
-4. `npm run migrate` (creates all tables; also runs automatically on first request, guarded by a Postgres advisory lock).
+4. `npm run migrate` creates all tables **and installs the baseline website content** (navigation pages, footer pages, the five schools, sample news, events and testimonials), so every menu and footer link works on a brand-new database without seeding. It never overwrites content staff have edited. It also runs automatically on first request. Run `npm run doctor` any time to check the connection and content counts.
 5. Create the first administrator (works in PowerShell, cmd, macOS and Linux): `npm run create-admin -- --email you@college.edu.ng --name "Your Name" --password "a-long-passphrase-1"`
 6. `npm start` behind TLS (Vercel, Render, Railway, a VPS with Caddy/nginx, or the included `Dockerfile`). Uploads are stored in Postgres, so the app servers stay stateless and can scale horizontally.
 
-**Demo data.** To try the platform with sample content, create a *separate Neon branch*, put its connection string in `.env` and run `npm run seed -- --wipe`. The seed **erases the database**; never run it on production. Demo accounts use `DEMO_PASSWORD` (default `Demo@12345`): `student@`, `lecturer@`, `hod@`, `dean@`, `registrar@`, `bursary@`, `exams@`, `webadmin@`, `editor@`, `ict@`, `super@` `demo.kcoe.test`.
+**Demo data.** To try the platform with sample content, create a *separate Neon branch*, put its connection string in `.env` and run `npm run seed:demo`. (Plain `npm run seed` refuses to touch a non-local database; `seed:demo` is the same command with the confirmation built in.) The seed **erases the database**; never run it on production. Demo accounts use `DEMO_PASSWORD` (default `Demo@12345`): `student@`, `lecturer@`, `hod@`, `dean@`, `registrar@`, `bursary@`, `exams@`, `webadmin@`, `editor@`, `ict@`, `super@` `demo.kcoe.test`.
 
 ## 2. Run locally without Neon (optional)
 

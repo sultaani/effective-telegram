@@ -42,25 +42,29 @@ function numbered(sql: string): string {
 async function migrate(): Promise<void> {
   const url = process.env.DATABASE_URL_UNPOOLED || connectionString();
   const local = /@(localhost|127\.0\.0\.1)[:/]/.test(url);
-  const p = url === process.env.DATABASE_URL ? pool() : new Pool({ connectionString: url, max: 1, ssl: local ? undefined : { rejectUnauthorized: true } });
+  const own = url !== process.env.DATABASE_URL;
+  const p = own ? new Pool({ connectionString: url, max: 1, ssl: local ? undefined : { rejectUnauthorized: true } }) : pool();
   const c = await p.connect();
   try {
-    await c.query("SELECT pg_advisory_lock(727001)"); // one migrator at a time across app instances
+    // One transaction: a transaction-level advisory lock serialises concurrent migrators (safe behind Neon's pooler),
+    // and a failed migration rolls back completely.
+    await c.query("BEGIN");
+    await c.query("SELECT pg_advisory_xact_lock(727001)");
     await c.query("CREATE TABLE IF NOT EXISTS schema_migrations(id INTEGER PRIMARY KEY, name TEXT NOT NULL, applied_at BIGINT NOT NULL)");
     const done = new Set((await c.query("SELECT id FROM schema_migrations")).rows.map((r) => Number(r.id)));
     for (const m of MIGRATIONS) {
       if (done.has(m.id)) continue;
-      await c.query("BEGIN");
-      try {
-        await c.query(m.sql);
-        await c.query("INSERT INTO schema_migrations(id,name,applied_at) VALUES($1,$2,$3)", [m.id, m.name, Date.now()]);
-        await c.query("COMMIT");
-      } catch (e) { await c.query("ROLLBACK"); throw e; }
+      if (m.sql) await c.query(m.sql);
+      if (m.up) await m.up((sql, params) => c.query(sql, params as unknown[]));
+      await c.query("INSERT INTO schema_migrations(id,name,applied_at) VALUES($1,$2,$3)", [m.id, m.name, Date.now()]);
     }
+    await c.query("COMMIT");
+  } catch (e) {
+    await c.query("ROLLBACK").catch(() => {});
+    throw e;
   } finally {
-    await c.query("SELECT pg_advisory_unlock(727001)").catch(() => {});
     c.release();
-    if (p !== g.__kcoePool) await p.end();
+    if (own) await p.end();
   }
 }
 

@@ -19,7 +19,9 @@
     "smoke:login": "node scripts/login-flow.mjs",
     "migrate": "tsx scripts/migrate.ts",
     "db:local": "node scripts/local-pg.mjs",
-    "db:seed": "tsx src/db/seed.ts"
+    "db:seed": "tsx src/db/seed.ts",
+    "doctor": "tsx scripts/doctor.ts",
+    "seed:demo": "tsx src/db/seed.ts --wipe"
   },
   "dependencies": {
     "@fontsource-variable/newsreader": "^5.3.0",
