@@ -4,6 +4,7 @@ import { all } from "../../../../db";
 import { listProgrammes } from "../../../../services/academics";
 import { ProgrammeForm } from "../../../../components/AdminForms";
 import { programmeVerifyAction } from "../../../actions/admin";
+import { ConfirmButton } from "../../../../components/Interactive";
 import { StatusBadge } from "../../../../components/bits";
 
 export const metadata: Metadata = { title: "Programmes" };
@@ -21,7 +22,7 @@ export default async function Page() {
           <tr key={p.id}><td data-label="Programme">{p.title}</td><td data-label="Department">{p.department}</td><td data-label="Award">{p.award}</td><td data-label="Accuracy"><StatusBadge status={p.verification} /></td><td data-label="Listed">{p.is_active ? "Yes" : "Hidden"}</td>
             <td data-label="Manage"><form action={programmeVerifyAction} className="row" style={{ justifyContent: "flex-end" }}><input type="hidden" name="id" value={p.id} />
               <select name="v" defaultValue={p.verification} aria-label={`Accuracy for ${p.title}`} style={{ width: "auto", minHeight: 36 }}><option value="VERIFIED">Verified</option><option value="AWAITING_CONFIRMATION">Awaiting confirmation</option><option value="SAMPLE">Demo content</option></select>
-              <button className="btn small secondary">Set</button><button name="toggle" value="1" className="btn small secondary">{p.is_active ? "Hide" : "Show"}</button></form></td></tr>))}</tbody></table></div>
+              <button className="btn small secondary">Set</button>{p.is_active ? <ConfirmButton name="toggle" value="1" className="btn small secondary" message={`Hide ${p.title} from the public website?`}>Hide</ConfirmButton> : <button name="toggle" value="1" className="btn small secondary">Show</button>}</form></td></tr>))}</tbody></table></div>
     </>
   );
 }

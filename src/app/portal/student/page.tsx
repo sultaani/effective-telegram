@@ -7,6 +7,7 @@ import { outstanding } from "../../../services/fees";
 import { studentResults } from "../../../services/results";
 import { listPublished } from "../../../services/cms";
 import { naira, dateTime } from "../../../lib/format";
+import { KeyDates } from "../../../components/KeyDates";
 import { StatusBadge, Alert } from "../../../components/bits";
 
 export const metadata: Metadata = { title: "Student dashboard" };
@@ -30,7 +31,7 @@ export default async function StudentHome() {
       <p className="muted">{st.programme} · {st.level} level · {st.matric_no}</p>
       <div className="panel"><h2>What needs your attention</h2>
         {todo.length ? <ul style={{ margin: 0, paddingLeft: "1.2rem" }}>{todo}</ul> : <p style={{ margin: 0 }}>Nothing is waiting for you. You are up to date.</p>}</div>
-      <div className="grid cols-4" style={{ marginBottom: "var(--space-6)" }}>
+      <div className="grid cols-4" style={{ marginBottom: "24px" }}>
         <div className="panel stat" style={{ margin: 0 }}><div className="v">{res.semesters.length ? res.cgpa.toFixed(2) : "–"}</div><div className="l">Current CGPA</div></div>
         <div className="panel stat" style={{ margin: 0 }}><div className="v">{naira(owed)}</div><div className="l">Outstanding fees</div></div>
         <div className="panel stat" style={{ margin: 0 }}><div className="v">{reg ? <StatusBadge status={reg.status} /> : "–"}</div><div className="l">{reg?.semester.label ?? "Registration"}</div></div>
@@ -39,7 +40,7 @@ export default async function StudentHome() {
       <div className="grid cols-2">
         <div className="panel"><h2>Unread notifications</h2>
           {notes.length === 0 ? <p className="muted" style={{ margin: 0 }}>No new notifications.</p> : <ul style={{ paddingLeft: "1.2rem", margin: 0 }}>{notes.map((n) => <li key={n.id}>{n.title} <span className="small muted">{dateTime(n.created_at)}</span></li>)}</ul>}
-          <p style={{ margin: "var(--space-3) 0 0" }}><Link href="/portal/student/notifications">All notifications</Link></p></div>
+          <p style={{ margin: "12px 0 0" }}><Link href="/portal/student/notifications">All notifications</Link></p></div>
         <div className="panel"><h2>Announcements</h2>
           {notices.length === 0 ? <p className="muted" style={{ margin: 0 }}>No announcements.</p> : notices.map((n) => <p key={n.id}><strong>{n.title}</strong><br /><span className="small muted">{n.summary}</span></p>)}</div>
       </div>

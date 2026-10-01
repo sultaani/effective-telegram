@@ -28,7 +28,7 @@ export function RegistrationForm({ courses, min, max, locked, hasSaved }: { cour
             <td data-label="Units" className="num">{c.units}</td>
           </tr>))}</tbody>
       </table></div>
-      <p aria-live="polite" style={{ marginTop: "var(--space-4)" }}><strong>{units} units selected.</strong> <span className={ok ? "" : "error-text"}>{ok ? "Within the allowed range." : `You must register between ${min} and ${max} units to submit.`}</span></p>
+      <p aria-live="polite" style={{ marginTop: "16px" }}><strong>{units} units selected.</strong> <span className={ok ? "" : "error-text"}>{ok ? "Within the allowed range." : `You must register between ${min} and ${max} units to submit.`}</span></p>
       {!locked && <div className="row"><Submit name="intent" value="draft" label="Save draft" className="btn secondary" /><Submit name="intent" value="submit" label="Submit registration" pendingLabel="Submitting…" disabled={!ok} /></div>}
     </form>
   );

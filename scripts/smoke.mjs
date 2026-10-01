@@ -29,8 +29,16 @@ ok((await get("/nope-not-real")).status === 404, "unknown page is 404");
 ok((await get("/news/draft-hostel-allocation")).status === 404, "draft news hidden from public");
 const home = await get("/");
 ok(home.text.includes("Find the right programme"), "home has programme finder");
-ok(home.text.includes("What our students say") && home.text.includes("Latest news") && home.text.includes("Study at KCOE") && home.text.includes("The Provost"), "home has student voices, latest news, study section and provost welcome");
-ok((home.text.match(/images\.unsplash\.com/g) || []).length >= 6, "home uses real photographs");
+ok(home.text.includes("What our students say") && home.text.includes("Latest news") && home.text.includes("Study at KCOE") && home.text.includes("Dr. Paul Femi FASHAGBA") && home.text.includes("Welcome to KCOE"), "home has student voices, latest news, study section and provost welcome");
+ok((home.text.match(/images\.unsplash\.com/g) || []).length >= 4, "home uses real photographs");
+ok(home.text.includes("/images/hero.jpg") && home.text.includes("/images/provost.webp"), "home uses the supplied hero and Provost photos");
+ok(!/Quick links|Information for|Information about/.test(home.text), "footer is minimal (no link columns)");
+ok(home.text.includes("info@kscoeankpa.edu.ng") && home.text.includes('class="sitefoot"'), "footer shows contact details");
+ok(/rel="icon"[^>]*\/icon\.png/.test(home.text) || /href="\/icon\.png/.test(home.text), "favicon link points at the crest");
+ok(!home.text.includes('class="utility"'), "no extra top strip above the navbar");
+for (const a of ["/images/logo.png", "/images/logo-96.png", "/images/hero.jpg", "/images/provost.webp", "/favicon.ico", "/icon.png", "/apple-icon.png"]) {
+  const r = await fetch(base + a); ok(r.status === 200 && /^image\//.test(r.headers.get("content-type") || ""), `asset ${a} -> ${r.status} ${r.headers.get("content-type")}`);
+}
 ok(!/awaiting confirmation|demo content|demonstration build/i.test(home.text), "no draft notices on the public home page");
 for (const item of ["Governing Council", "Vision and Mission", "Support Services", "TETFund", "Admissions", "Academics"]) ok(home.text.includes(item), `nav contains ${item}`);
 for (const pth of ["/about", "/admissions", "/programmes/biology-chemistry", "/news/admission-applications-open"]) ok(!/awaiting confirmation|demo content/i.test((await get(pth)).text), `${pth} has no draft notices`);

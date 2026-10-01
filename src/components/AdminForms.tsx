@@ -12,7 +12,7 @@ export function CreateUserForm({ canPrivileged }: { canPrivileged: boolean }) {
         <div className="field"><label htmlFor="cu-name">Full name</label><input id="cu-name" name="name" type="text" required /></div>
         <div className="field"><label htmlFor="cu-email">Email</label><input id="cu-email" name="email" type="email" required /></div>
       </div>
-      <fieldset style={{ border: 0, padding: 0, margin: "0 0 var(--space-4)" }}><legend className="label">Roles</legend>
+      <fieldset style={{ border: 0, padding: 0, margin: "0 0 16px" }}><legend className="label">Roles</legend>
         <div className="row">{ROLES.filter((r) => r !== "STUDENT" && (canPrivileged || (r !== "SUPER_ADMIN" && r !== "ICT_ADMIN"))).map((r) => <label key={r} className="row" style={{ gap: 6 }}><input type="checkbox" name="roles" value={r} />{ROLE_LABELS[r]}</label>)}</div></fieldset>
     </ActionForm>
   );

@@ -4,6 +4,7 @@ import { listSchools } from "../../services/academics";
 import { dateOnly } from "../../lib/format";
 import { PHOTO } from "../../lib/images";
 import { Photo } from "../../components/Photo";
+import { SITE } from "../../lib/site-config";
 
 const STUDY = [
   ["Prospective students", "/admissions"], ["NCE programmes", "/nce-programmes"], ["Degree programme", "/degree-programme"],
@@ -24,12 +25,15 @@ export default async function Home() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld).replace(/</g, "\\u003c") }} />
       <section className="hero" aria-labelledby="hero-h">
-        <Photo src={PHOTO.campus} alt="Buildings and grounds of a university campus in Nigeria" w={1800} priority className="hero-img" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/hero.jpg" alt="The administrative building of Kogi State College of Education, Ankpa" className="hero-img" width={1025} height={408} fetchPriority="high" decoding="async" />
         <div className="container hero-body">
-          <p className="eyebrow">Ankpa, Kogi State</p>
-          <h1 id="hero-h">Learn to teach. Learn to lead.</h1>
-          <p className="lead">Kogi State College of Education, Ankpa prepares teachers for the classrooms of Kogi State and beyond.</p>
-          <div className="row"><Link className="btn" href="/how-to-apply">How to apply</Link><Link className="btn secondary" href="/programmes">Explore programmes</Link></div>
+          <div className="hero-card">
+            <p className="eyebrow">Ankpa, Kogi State</p>
+            <h1 id="hero-h">Learn to teach. Learn to lead.</h1>
+            <p className="lead">Kogi State College of Education, Ankpa prepares teachers for the classrooms of Kogi State and beyond.</p>
+            <div className="row"><Link className="btn" href="/how-to-apply">How to apply</Link><Link className="btn secondary" href="/programmes">Explore programmes</Link></div>
+          </div>
         </div>
         {notices[0] && <Link href="/news#announcements" className="hero-chip"><strong>Notice</strong><span>{notices[0].title}</span></Link>}
       </section>
@@ -43,18 +47,13 @@ export default async function Home() {
         </form>
       </div>
 
-      <section className="section" aria-labelledby="welcome-h">
+      <section className="welcome" aria-labelledby="welcome-h">
         <div className="container">
-          <p className="kicker">Welcome to KCOE</p>
-          <h2 id="welcome-h" className="sr-only">Welcome from the Provost</h2>
-          <div className="welcome">
-            <div className="welcome-photo">{provost?.image_url ? <Photo src={provost.image_url} alt="The Provost" w={700} /> : <svg width="120" height="120" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4 42 10v13c0 10-7 18-18 21C13 41 6 33 6 23V10z" fill="#fff" stroke="#17704a" strokeWidth="2.5" /><path d="M24 4 42 10v5H6v-5z" fill="#17704a" /></svg>}</div>
-            <div>
-              <blockquote>{provost?.summary ?? "Welcome to Kogi State College of Education, Ankpa."}</blockquote>
-              <cite><strong>The Provost</strong>Kogi State College of Education, Ankpa</cite>
-              <p style={{ marginTop: "var(--space-6)" }}><Link className="arrowlink" href="/provost-welcome">Read the full message</Link></p>
-            </div>
-          </div>
+          <h2 id="welcome-h">Welcome to KCOE</h2>
+          <div className="welcome-photo"><Photo src={provost?.image_url ?? "/images/provost.webp"} alt={`${SITE.provost.title}, ${SITE.provost.name}`} w={400} /></div>
+          <p className="welcome-text">{provost?.summary ?? "Welcome to Kogi State College of Education, Ankpa."}</p>
+          <p className="welcome-name">{SITE.provost.title}, {SITE.provost.name}</p>
+          <p className="welcome-more"><Link className="arrowlink" href="/provost-welcome">Read the full message</Link></p>
         </div>
       </section>
 
@@ -64,7 +63,7 @@ export default async function Home() {
             <div className="study-img"><Photo src={PHOTO.teacher} alt="A teacher standing in front of a class of pupils" w={1000} /></div>
             <div className="study-body">
               <p className="kicker">Study with us</p>
-              <h2 id="study-h" style={{ fontSize: "clamp(1.8rem,1.3rem + 1.6vw,2.6rem)" }}>Study at KCOE</h2>
+              <h2 id="study-h" style={{ fontWeight: 300 }}>Study at KCOE</h2>
               <p className="muted" style={{ marginBottom: 0 }}>From the Nigeria Certificate in Education to the degree and post-degree routes, find the path that fits your teaching career.</p>
               <ul className="study-list">{STUDY.map(([l, h]) => <li key={l}><Link href={h}>{l}</Link></li>)}</ul>
             </div>

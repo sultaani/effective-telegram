@@ -15,7 +15,7 @@ export default async function Search({ searchParams }: { searchParams: Promise<R
     <>
       <PageHead title="Search" crumbs={[["Search"]]} />
       <div className="container section" style={{ maxWidth: 800 }}>
-        <form role="search" className="row" style={{ marginBottom: "var(--space-6)" }}>
+        <form role="search" className="row" style={{ marginBottom: "24px" }}>
           <label htmlFor="sq" className="sr-only">Search the site</label>
           <input id="sq" name="q" type="search" defaultValue={q} style={{ flex: 1, minWidth: 200 }} /><button className="btn" type="submit">Search</button>
         </form>

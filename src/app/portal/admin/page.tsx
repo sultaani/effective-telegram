@@ -7,6 +7,7 @@ import { feeSummary } from "../../../services/fees";
 import { pendingRegistrations } from "../../../services/registration";
 import { approvalQueue } from "../../../services/results";
 import { naira, dateTime } from "../../../lib/format";
+import { KeyDates } from "../../../components/KeyDates";
 
 export const metadata: Metadata = { title: "Administration dashboard" };
 
@@ -26,8 +27,9 @@ export default async function Page() {
     <>
       <h1>Welcome, {s.user.name}</h1>
       <div className="panel"><h2>What needs action</h2>{items.length ? <ul style={{ margin: 0, paddingLeft: "1.2rem" }}>{items.map((i) => <li key={i.href}><Link href={i.href}>{i.text}</Link></li>)}</ul> : <p style={{ margin: 0 }}>Nothing is waiting for you.</p>}</div>
-      <div className="grid cols-4" style={{ marginBottom: "var(--space-6)" }}>{cards.map((c) => <div key={c.l} className="panel stat" style={{ margin: 0 }}><div className="v">{c.v}</div><div className="l">{c.l}</div></div>)}</div>
-      {recent.length > 0 && <div className="panel"><h2>Recent activity</h2><ul style={{ margin: 0, paddingLeft: "1.2rem" }}>{recent.map((r) => <li key={r.id}><code>{r.action}</code> on {r.entity} <span className="small muted">{dateTime(r.created_at)}</span></li>)}</ul><p style={{ margin: "var(--space-3) 0 0" }}><Link href="/portal/admin/audit">Full audit log</Link></p></div>}
+      <KeyDates />
+      <div className="grid cols-4" style={{ marginBottom: "24px" }}>{cards.map((c) => <div key={c.l} className="panel stat" style={{ margin: 0 }}><div className="v">{c.v}</div><div className="l">{c.l}</div></div>)}</div>
+      {recent.length > 0 && <div className="panel"><h2>Recent activity</h2><ul style={{ margin: 0, paddingLeft: "1.2rem" }}>{recent.map((r) => <li key={r.id}><code>{r.action}</code> on {r.entity} <span className="small muted">{dateTime(r.created_at)}</span></li>)}</ul><p style={{ margin: "12px 0 0" }}><Link href="/portal/admin/audit">Full audit log</Link></p></div>}
     </>
   );
 }

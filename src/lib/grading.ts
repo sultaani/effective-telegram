@@ -3,9 +3,11 @@
  * confirm the scale and pass mark with the college's Examinations Officer before production use.
  */
 export const GRADING_SCALE = [
-  { min: 70, grade: "A", points: 5 }, { min: 60, grade: "B", points: 4 }, { min: 50, grade: "C", points: 3 },
-  { min: 45, grade: "D", points: 2 }, { min: 40, grade: "E", points: 1 }, { min: 0, grade: "F", points: 0 },
+  { min: 70, grade: "A", points: 5, remark: "Excellent" }, { min: 60, grade: "B", points: 4, remark: "Very good" }, { min: 50, grade: "C", points: 3, remark: "Good" },
+  { min: 45, grade: "D", points: 2, remark: "Fair" }, { min: 40, grade: "E", points: 1, remark: "Pass" }, { min: 0, grade: "F", points: 0, remark: "Fail" },
 ] as const;
+export const remarkFor = (grade: string) => GRADING_SCALE.find((g) => g.grade === grade)?.remark ?? "";
+export const isPass = (grade: string) => grade !== "F";
 export const MAX_CA = 30;
 export const MAX_EXAM = 70;
 

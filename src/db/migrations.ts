@@ -1,5 +1,5 @@
 /** Ordered, append-only PostgreSQL migrations. Never edit an applied migration; add a new one. */
-import { applyBaseline, type Q } from "./baseline";
+import { applyBaseline, PROVOST_BODY, PROVOST_IMAGE, PROVOST_SUMMARY, type Q } from "./baseline";
 
 export const MIGRATIONS: { id: number; name: string; sql?: string; up?: (q: Q) => Promise<void> }[] = [
   {
@@ -79,4 +79,13 @@ CREATE INDEX idx_audit_time ON audit_log(created_at);
 `,
   },
   { id: 2, name: "baseline-site-content", up: applyBaseline },
+  {
+    id: 3, name: "provost-welcome-with-real-photo",
+    up: async (q) => {
+      // Only touches the page while it still carries the original stock photo, so edits made in the CMS are never overwritten.
+      await q(`UPDATE content_items SET image_url=$1, summary=$2, body=$3, updated_at=$4
+               WHERE type='page' AND slug='provost-welcome' AND (image_url IS NULL OR image_url LIKE 'https://images.unsplash.com%')`,
+        [PROVOST_IMAGE, PROVOST_SUMMARY, PROVOST_BODY, Date.now()]);
+    },
+  },
 ];

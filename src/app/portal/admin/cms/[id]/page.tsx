@@ -5,6 +5,7 @@ import { requirePermission } from "../../../../../lib/auth";
 import { can } from "../../../../../lib/permissions";
 import { CONTENT_TYPES, getById, VERIFICATIONS } from "../../../../../services/cms";
 import { ContentForm } from "../../../../../components/AdminForms";
+import { ConfirmButton } from "../../../../../components/Interactive";
 import { StatusBadge, str } from "../../../../../components/bits";
 import { transitionAction, verifyAction } from "../../../../actions/admin";
 
@@ -33,8 +34,8 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       <p><Link href="/portal/admin/cms">Back to content</Link> {item.status === "PUBLISHED" && path && <>· <Link href={path}>View on the website</Link></>}</p>
       <div className="panel"><h2>Publishing</h2>
         <p>Status: <StatusBadge status={item.status} /> · Accuracy: <StatusBadge status={item.verification} /></p>
-        <div className="row">{steps.map(([to, label]) => <form key={to} action={transitionAction}><input type="hidden" name="id" value={item.id} /><input type="hidden" name="to" value={to} /><button className={to === "ARCHIVED" ? "btn small secondary" : "btn small"}>{label}</button></form>)}</div>
-        {can(s.actor, "cms:verify") && <form action={verifyAction} className="row" style={{ marginTop: "var(--space-4)" }}><input type="hidden" name="id" value={item.id} />
+        <div className="row">{steps.map(([to, label]) => <form key={to} action={transitionAction}><input type="hidden" name="id" value={item.id} /><input type="hidden" name="to" value={to} />{to === "ARCHIVED" || to === "PUBLISHED" || item.status === "PUBLISHED" ? <ConfirmButton className={to === "ARCHIVED" ? "btn small secondary" : "btn small"} message={to === "PUBLISHED" ? "Publish this to the public website?" : "Remove this from the public website?"}>{label}</ConfirmButton> : <button className="btn small">{label}</button>}</form>)}</div>
+        {can(s.actor, "cms:verify") && <form action={verifyAction} className="row" style={{ marginTop: "16px" }}><input type="hidden" name="id" value={item.id} />
           <label htmlFor="ver" className="label">Accuracy</label><select id="ver" name="v" defaultValue={item.verification} style={{ width: "auto" }}>{VERIFICATIONS.map((v) => <option key={v} value={v}>{v === "VERIFIED" ? "Verified" : v === "SAMPLE" ? "Demo content" : "Awaiting confirmation"}</option>)}</select><button className="btn small secondary">Update</button></form>}
         {!publisher && item.status !== "DRAFT" && item.status !== "REVIEW" && <p className="small muted">Only a website administrator can change published content.</p>}
       </div>

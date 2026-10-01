@@ -11,7 +11,7 @@ describe("main navigation styles", () => {
     expect(css).toMatch(/\.mn-panel\[hidden\]\s*\{\s*display:\s*none/);
   });
   it("never applies a display rule to the panel that could reopen it on mobile", () => {
-    const mobile = css.slice(css.indexOf("@media (max-width: 1000px)"));
+    const mobile = css.slice(css.indexOf("@media (max-width: 1040px)"));
     const panelRule = /\.mn-panel\s*\{([^}]*)\}/.exec(mobile)?.[1] ?? "";
     expect(panelRule).not.toMatch(/display:\s*(block|flex)/);
   });

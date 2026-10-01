@@ -5,6 +5,7 @@ import { assignedCourses, approvalQueue } from "../../../services/results";
 import { currentSemester } from "../../../services/academics";
 import { listPublished } from "../../../services/cms";
 import { Empty } from "../../../components/bits";
+import { KeyDates } from "../../../components/KeyDates";
 
 export const metadata: Metadata = { title: "Staff dashboard" };
 
@@ -26,6 +27,7 @@ export default async function Page() {
           {queue.map((q) => <li key={q.course_id}><Link href="/portal/staff/approvals">{q.code}: results from {q.lecturer ?? "a lecturer"} await your approval ({q.n} students)</Link></li>)}
           {!needScores.length && !queue.length && <li>Nothing is waiting for you.</li>}
         </ul></div>
+      <KeyDates />
       <div className="grid cols-2">
         <div className="panel"><h2>Courses this semester</h2>
           {courses.length === 0 ? <Empty title="No courses assigned">Your Head of Department assigns courses each semester.</Empty> :

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { requirePermission } from "../../../../lib/auth";
 import { approvalQueue } from "../../../../services/results";
 import { publishAction } from "../../../actions/admin";
+import { ConfirmButton } from "../../../../components/Interactive";
 import { Empty } from "../../../../components/bits";
 
 export const metadata: Metadata = { title: "Results publication" };
@@ -16,7 +17,7 @@ export default async function Page() {
         <div className="panel table-wrap"><table className="table stack-sm"><thead><tr><th>Course</th><th>Department</th><th>Lecturer</th><th className="num">Students</th><th></th></tr></thead>
           <tbody>{rows.map((r) => (
             <tr key={`${r.course_id}-${r.semester_id}`}><td data-label="Course"><strong>{r.code}</strong> {r.title}</td><td data-label="Department">{r.department}</td><td data-label="Lecturer">{r.lecturer ?? "–"}</td><td data-label="Students" className="num">{r.n}</td>
-              <td data-label=""><form action={publishAction}><input type="hidden" name="course" value={r.course_id} /><input type="hidden" name="semester" value={r.semester_id} /><button className="btn small">Publish results</button></form></td></tr>))}</tbody></table></div>
+              <td data-label=""><form action={publishAction}><input type="hidden" name="course" value={r.course_id} /><input type="hidden" name="semester" value={r.semester_id} /><ConfirmButton className="btn small" message={`Publish ${r.code} results? Students will see them immediately and be notified.`}>Publish results</ConfirmButton></form></td></tr>))}</tbody></table></div>
       )}
     </>
   );

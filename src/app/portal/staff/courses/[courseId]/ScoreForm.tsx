@@ -32,7 +32,7 @@ export function ScoreForm({ courseId, rows, maxCa, maxExam }: { courseId: number
               <td data-label="Status">{r.status ? <span className={`badge ${r.status === "DRAFT" ? "warn" : r.status === "PUBLISHED" ? "ok" : "info"}`}>{r.status === "DRAFT" ? "Draft" : r.status === "SUBMITTED" ? "With HOD" : r.status === "HOD_APPROVED" ? "With exams office" : "Published"}</span> : <span className="badge neutral">No score</span>}</td>
             </tr>);
         })}</tbody></table></div>
-      {!locked && <div className="row" style={{ marginTop: "var(--space-4)" }}>
+      {!locked && <div className="row" style={{ marginTop: "16px" }}>
         <Submit name="intent" value="save" label="Save scores" className="btn secondary" pendingLabel="Saving…" />
         <Submit name="intent" value="submit" label="Save and submit to HOD" pendingLabel="Submitting…" />
       </div>}

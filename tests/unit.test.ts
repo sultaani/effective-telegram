@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { hashPassword, verifyPassword, passwordProblem } from "../src/lib/password";
-import { gradeFor, gpa, validateScores } from "../src/lib/grading";
+import { gradeFor, gpa, validateScores, remarkFor, isPass } from "../src/lib/grading";
 import { can, canInDepartment, ROLES, ROLE_PERMISSIONS, homeFor } from "../src/lib/permissions";
 import { toCsv } from "../src/lib/csv";
 import { validateUpload } from "../src/lib/files";
@@ -28,6 +28,10 @@ describe("grading", () => {
   it("maps totals to grades at the boundaries", () => {
     expect(gradeFor(70).grade).toBe("A"); expect(gradeFor(69.9).grade).toBe("B");
     expect(gradeFor(45).grade).toBe("D"); expect(gradeFor(39).grade).toBe("F");
+  });
+  it("labels every grade with a text remark and pass/fail", () => {
+    expect(remarkFor("A")).toBe("Excellent"); expect(remarkFor("F")).toBe("Fail");
+    expect(isPass("E")).toBe(true); expect(isPass("F")).toBe(false);
   });
   it("computes unit-weighted GPA", () => {
     expect(gpa([{ units: 3, points: 5 }, { units: 2, points: 3 }])).toBe(4.2);

@@ -26,9 +26,9 @@ export default async function News() {
             ))}
           </div>
         )}
-        <section id="announcements" style={{ marginTop: "var(--space-16)" }} aria-labelledby="ann-h">
+        <section id="announcements" style={{ marginTop: "64px" }} aria-labelledby="ann-h">
           <h2 id="ann-h">Announcements</h2>
-          {notices.length === 0 ? <p className="muted">No announcements.</p> : notices.map((n) => <div key={n.id} className="item"><h3 style={{ color: "var(--kcoe-ink)" }}>{n.title}</h3><p className="small muted" style={{ margin: 0 }}>{dateOnly(n.published_at)}. {n.summary}</p></div>)}
+          {notices.length === 0 ? <p className="muted">No announcements.</p> : notices.map((n) => <div key={n.id} className="item"><h3 style={{ color: "var(--text)" }}>{n.title}</h3><p className="small muted" style={{ margin: 0 }}>{dateOnly(n.published_at)}. {n.summary}</p></div>)}
         </section>
       </div>
     </>

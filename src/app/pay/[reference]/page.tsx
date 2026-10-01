@@ -4,7 +4,7 @@ import { requireSession } from "../../../lib/auth";
 import { paymentByReference } from "../../../services/fees";
 import { naira } from "../../../lib/format";
 import { simulateGateway } from "../../actions/student";
-import { Crest } from "../../../components/bits";
+import { Logo } from "../../../components/bits";
 
 export const metadata: Metadata = { title: "Demo payment gateway", robots: { index: false } };
 
@@ -17,10 +17,10 @@ export default async function DemoPay({ params }: { params: Promise<{ reference:
   return (
     <div data-surface="portal" className="login">
       <main id="main" className="card">
-        <div className="row" style={{ marginBottom: "var(--space-4)" }}><Crest size={36} /><strong>DemoPay checkout</strong><span className="badge warn">Simulator</span></div>
+        <div className="row" style={{ marginBottom: 16 }}><Logo size={36} /><strong>DemoPay checkout</strong><span className="badge warn">Simulator</span></div>
         <p className="small muted">This screen imitates an external payment provider so the payment flow can be demonstrated. No real money moves.</p>
         <h1 style={{ fontSize: "1.4rem" }}>{p.description}</h1>
-        <p style={{ fontSize: "1.8rem", fontFamily: "var(--font-heading)", margin: "0 0 var(--space-4)" }}>{naira(p.amount_kobo)}</p>
+        <p style={{ fontSize: "1.8rem", fontFamily: "var(--font-head)", margin: "0 0 16px" }}>{naira(p.amount_kobo)}</p>
         <p className="small muted">Reference {p.reference}</p>
         {done ? <a className="btn" href="/portal/student/fees">Back to fees ({p.status.toLowerCase()})</a> : (
           <div className="stack">

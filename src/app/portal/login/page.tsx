@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getSession, homeFor } from "../../../lib/auth";
 import { LoginForm } from "./LoginForm";
-import { Crest } from "../../../components/bits";
+import { Logo } from "../../../components/bits";
 
 export const metadata: Metadata = { title: "Portal sign-in", robots: { index: false } };
 
@@ -14,12 +14,12 @@ export default async function LoginPage() {
   return (
     <div data-surface="portal" className="login">
       <main id="main" className="card">
-        <div className="row" style={{ marginBottom: "var(--space-6)" }}><Crest /><div><strong style={{ fontFamily: "var(--font-heading)", fontSize: "1.2rem" }}>KCOE Portal</strong><div className="small muted">Students, lecturers and administrators</div></div></div>
-        <h1 style={{ fontSize: "1.5rem" }}>Sign in</h1>
+        <div className="login-brand"><Logo size={48} /><div><strong>KCOE Portal</strong><div className="small muted">Students, lecturers and administrators</div></div></div>
+        <h1>Sign in</h1>
         <LoginForm />
-        <p className="small muted" style={{ marginTop: "var(--space-4)" }}>Forgot your password? Contact the ICT Directorate to have it reset. <Link href="/">Back to the college website</Link></p>
+        <p className="small muted" style={{ marginTop: "16px" }}>Forgot your password? Contact the ICT Directorate to have it reset. <Link href="/">Back to the college website</Link></p>
         {demo && (
-          <details className="small" style={{ marginTop: "var(--space-4)", borderTop: "1px solid var(--kcoe-border)", paddingTop: "var(--space-3)" }}>
+          <details className="small" style={{ marginTop: "16px", borderTop: "1px solid var(--border)", paddingTop: "12px" }}>
             <summary style={{ cursor: "pointer", fontWeight: 600 }}>Demo accounts</summary>
             <p>Password for all: <code>Demo@12345</code></p>
             <ul style={{ paddingLeft: "1.1rem" }}>

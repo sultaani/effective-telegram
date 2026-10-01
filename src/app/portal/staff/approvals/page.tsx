@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { requireSession } from "../../../../lib/auth";
 import { approvalQueue } from "../../../../services/results";
 import { decideAction } from "../../../actions/staff";
+import { ConfirmButton } from "../../../../components/Interactive";
 import { Empty } from "../../../../components/bits";
 
 export const metadata: Metadata = { title: "Result approvals" };
@@ -19,7 +20,7 @@ export default async function Page() {
             <tr key={`${q.course_id}-${q.semester_id}`}><td data-label="Course"><strong>{q.code}</strong> {q.title}</td><td data-label="Department">{q.department}</td><td data-label="Lecturer">{q.lecturer ?? "–"}</td><td data-label="Students" className="num">{q.n}</td>
               <td data-label="Decision"><form action={decideAction} className="row" style={{ justifyContent: "flex-end" }}>
                 <input type="hidden" name="course" value={q.course_id} /><input type="hidden" name="semester" value={q.semester_id} />
-                <button name="decision" value="approve" className="btn small">Approve</button><button name="decision" value="return" className="btn small secondary">Return to lecturer</button></form></td></tr>))}</tbody></table></div>
+                <ConfirmButton name="decision" value="approve" className="btn small" message={`Approve ${q.code} results and send them to the Examinations Office?`}>Approve</ConfirmButton><ConfirmButton name="decision" value="return" className="btn small secondary" message="Return these results to the lecturer for correction?">Return to lecturer</ConfirmButton></form></td></tr>))}</tbody></table></div>
       )}
     </>
   );

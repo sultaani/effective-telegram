@@ -38,17 +38,10 @@ export function Pagination({ page, pages, base, params }: { page: number; pages:
   );
 }
 
-/** Placeholder crest. Replace with the college's official crest when supplied. */
-export function Crest({ size = 44 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 48 48" role="img" aria-label="KCOE placeholder crest">
-      <path d="M24 3 43 9v14c0 11-8 19-19 22C13 42 5 34 5 23V9z" fill="#fff" stroke="#17704a" strokeWidth="3" />
-      <path d="M24 3 43 9v6H5V9z" fill="#17704a" />
-      <rect x="5" y="15" width="38" height="4" fill="#1b5aa6" />
-      <text x="24" y="35" textAnchor="middle" fontFamily="Georgia, serif" fontWeight="700" fontSize="14" fill="#1a2433">K</text>
-      <rect x="18" y="39" width="12" height="3" fill="#b3261e" />
-    </svg>
-  );
+/** The college crest (transparent PNG). Also used as the favicon. */
+export function Logo({ size = 44, className }: { size?: number; className?: string }) {
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src={size > 96 ? "/images/logo.png" : "/images/logo-96.png"} width={size} height={size} alt="Kogi State College of Education crest" className={className} decoding="async" />;
 }
 
 export const pageNum = (v: string | string[] | undefined) => Math.max(1, parseInt(Array.isArray(v) ? v[0] : v ?? "1", 10) || 1);

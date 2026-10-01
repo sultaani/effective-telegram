@@ -14,7 +14,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
   return (
     <>
       <h1>Website content</h1>
-      <div className="row" style={{ marginBottom: "var(--space-4)" }}>{CONTENT_TYPES.map((t) => <Link key={t} className="btn small secondary" href={`/portal/admin/cms/new?type=${t}`}>New {t}</Link>)}</div>
+      <div className="row" style={{ marginBottom: "16px" }}>{CONTENT_TYPES.map((t) => <Link key={t} className="btn small secondary" href={`/portal/admin/cms/new?type=${t}`}>New {t}</Link>)}</div>
       <form className="filters" role="search"><div className="field"><label htmlFor="q">Search titles</label><input id="q" name="q" type="search" defaultValue={q} /></div>
         <div className="field"><label htmlFor="type">Type</label><select id="type" name="type" defaultValue={type ?? ""}><option value="">All</option>{CONTENT_TYPES.map((t) => <option key={t}>{t}</option>)}</select></div>
         <div className="field"><label htmlFor="status">Status</label><select id="status" name="status" defaultValue={status ?? ""}><option value="">All</option>{STATUSES.map((t) => <option key={t}>{t}</option>)}</select></div><button className="btn">Filter</button></form>

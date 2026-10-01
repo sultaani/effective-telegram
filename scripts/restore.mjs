@@ -17,15 +17,29 @@ await c.query("BEGIN");
 try {
   const names = files.map((f) => f.replace(".json.gz", "")).filter((t) => t !== "schema_migrations");
   await c.query(`TRUNCATE ${names.map((t) => `"${t}"`).join(",")} RESTART IDENTITY CASCADE`);
-  for (const f of files) {
-    const t = f.replace(".json.gz", ""); if (t === "schema_migrations") continue;
+  // Parents before children, from the database's own foreign keys (Kahn's algorithm).
+  const fk = (await c.query(`SELECT cl.relname AS child, pr.relname AS parent FROM pg_constraint k
+    JOIN pg_class cl ON cl.oid=k.conrelid JOIN pg_class pr ON pr.oid=k.confrelid JOIN pg_namespace n ON n.oid=cl.relnamespace
+    WHERE k.contype='f' AND n.nspname='public' AND cl.relname<>pr.relname`)).rows;
+  const deps = new Map(names.map((t) => [t, new Set(fk.filter((r) => r.child === t).map((r) => r.parent))]));
+  const serialTables = new Set((await c.query(`SELECT table_name FROM information_schema.columns WHERE table_schema='public' AND column_name='id' AND column_default LIKE 'nextval%'`)).rows.map((r) => r.table_name));
+  const ordered = [];
+  while (ordered.length < names.length) {
+    const next = names.filter((t) => !ordered.includes(t) && [...deps.get(t)].every((p) => ordered.includes(p) || !names.includes(p)));
+    if (!next.length) throw new Error("Circular foreign keys: cannot order tables");
+    ordered.push(...next);
+  }
+  for (const t of ordered) {
+    const f = `${t}.json.gz`; if (!files.includes(f)) continue;
     const rows = JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(src, f))).toString(), (_, v) => (v && typeof v === "object" && v.$b64 ? Buffer.from(v.$b64, "base64") : v));
     for (const r of rows) {
       const cols = Object.keys(r);
       await c.query(`INSERT INTO "${t}"(${cols.map((k) => `"${k}"`).join(",")}) VALUES(${cols.map((_, i) => `$${i + 1}`).join(",")})`, cols.map((k) => r[k]));
     }
-    const seq = await c.query("SELECT pg_get_serial_sequence($1,'id') s", [`"${t}"`]);
-    if (seq.rows[0]?.s) await c.query(`SELECT setval($1, COALESCE((SELECT MAX(id) FROM "${t}"),1))`, [seq.rows[0].s]);
+    if (serialTables.has(t)) {
+      const seq = await c.query("SELECT pg_get_serial_sequence($1,'id') s", [`"${t}"`]);
+      if (seq.rows[0]?.s) await c.query(`SELECT setval($1, COALESCE((SELECT MAX(id) FROM "${t}"),1))`, [seq.rows[0].s]);
+    }
   }
   await c.query("COMMIT");
   console.log("Restored from", src);

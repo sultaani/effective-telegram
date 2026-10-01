@@ -13,7 +13,7 @@ export async function NotificationList({ userId }: { userId: number }) {
       {rows.length === 0 ? <Empty title="You are all caught up">New notifications will appear here.</Empty> : (
         <div className="panel" style={{ padding: 0 }}>
           {rows.map((n) => (
-            <div key={n.id} style={{ padding: "var(--space-4)", borderBottom: "1px solid var(--kcoe-border)", background: n.read_at ? "transparent" : "var(--portal-primary-tint)" }}>
+            <div key={n.id} style={{ padding: "16px", borderBottom: "1px solid var(--border)", background: n.read_at ? "transparent" : "var(--navy-tint)" }}>
               <div className="row between"><strong>{n.title}{!n.read_at && <span className="badge info" style={{ marginLeft: 8 }}>New</span>}</strong><span className="small muted">{dateTime(n.created_at)}</span></div>
               <p style={{ margin: "4px 0 0" }}>{n.body} {n.link && <Link href={n.link}>Open</Link>}</p>
             </div>

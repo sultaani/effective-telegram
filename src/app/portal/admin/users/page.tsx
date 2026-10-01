@@ -4,6 +4,7 @@ import { listUsers } from "../../../../services/users";
 import { ROLES, ROLE_LABELS, type Role } from "../../../../lib/permissions";
 import { CreateUserForm, ResetPasswordForm } from "../../../../components/AdminForms";
 import { setRolesAction, toggleActiveAction } from "../../../actions/admin";
+import { ConfirmButton } from "../../../../components/Interactive";
 import { Empty, Pagination, StatusBadge, pageNum, str } from "../../../../components/bits";
 
 export const metadata: Metadata = { title: "Users" };
@@ -31,7 +32,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
                 <td data-label="Roles">{roles.map((r) => ROLE_LABELS[r]).join(", ") || "–"}</td>
                 <td data-label="Status">{u.is_active ? <span className="badge ok">Active</span> : <span className="badge bad">Deactivated</span>}</td>
                 <td data-label="Manage"><div className="stack" style={{ textAlign: "left" }}>
-                  <form action={toggleActiveAction}><input type="hidden" name="user" value={u.id} /><input type="hidden" name="active" value={u.is_active ? "0" : "1"} /><button className="btn small secondary">{u.is_active ? "Deactivate" : "Reactivate"}</button></form>
+                  <form action={toggleActiveAction}><input type="hidden" name="user" value={u.id} /><input type="hidden" name="active" value={u.is_active ? "0" : "1"} />{u.is_active ? <ConfirmButton className="btn small secondary" message={`Deactivate ${u.name}? They will be signed out and unable to sign in.`}>Deactivate</ConfirmButton> : <button className="btn small secondary">Reactivate</button>}</form>
                   <ResetPasswordForm userId={u.id} />
                   {editable && <details><summary style={{ cursor: "pointer", fontWeight: 600 }}>Change roles</summary>
                     <form action={setRolesAction} style={{ marginTop: 8 }}><input type="hidden" name="user" value={u.id} />

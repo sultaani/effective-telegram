@@ -19,7 +19,7 @@ export default async function Page() {
         <div className="panel"><h2>Published grade distribution</h2>
           {grades.length === 0 ? <p className="muted">No published results yet.</p> : grades.map((g) => (
             <div key={g.grade} className="row" style={{ marginBottom: 6 }}><span style={{ width: 24, fontWeight: 700 }}>{g.grade}</span>
-              <div style={{ flex: 1, background: "var(--portal-primary-tint)", height: 18 }} role="img" aria-label={`Grade ${g.grade}: ${g.n} results`}><div style={{ width: `${(g.n / max) * 100}%`, background: "var(--portal-primary)", height: "100%" }} /></div><span style={{ width: 40, textAlign: "right" }}>{g.n}</span></div>))}</div>
+              <div style={{ flex: 1, background: "var(--navy-tint)", height: 18 }} role="img" aria-label={`Grade ${g.grade}: ${g.n} results`}><div style={{ width: `${(g.n / max) * 100}%`, background: "var(--navy)", height: "100%" }} /></div><span style={{ width: 40, textAlign: "right" }}>{g.n}</span></div>))}</div>
       </div>
     </>
   );

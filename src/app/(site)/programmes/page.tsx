@@ -26,7 +26,7 @@ export default async function Programmes({ searchParams }: { searchParams: Promi
             {rows.map((p) => (
               <Link key={p.id} href={`/programmes/${p.slug}`} className="schoolcard">
                 <h2 style={{ fontSize: "1.2rem" }}>{p.title}</h2>
-                <p className="small muted" style={{ margin: "0 0 var(--space-3)" }}>{p.school} · {p.department}</p>
+                <p className="small muted" style={{ margin: "0 0 12px" }}>{p.school} · {p.department}</p>
                 <div className="row"><span className="badge info">{p.award}</span><span className="small">{p.duration_years} {p.duration_years === 1 ? "year" : "years"}</span></div>
               </Link>
             ))}

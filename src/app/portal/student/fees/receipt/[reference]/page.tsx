@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { requireSession } from "../../../../../../lib/auth";
 import { receipt } from "../../../../../../services/fees";
+import { PrintButton } from "../../../../../../components/Interactive";
 import { naira, dateTime } from "../../../../../../lib/format";
 
 export const metadata: Metadata = { title: "Payment receipt", robots: { index: false } };
@@ -12,7 +13,7 @@ export default async function Page({ params }: { params: Promise<{ reference: st
   if (!r) notFound();
   return (
     <div className="panel" style={{ maxWidth: 640 }}>
-      <h1 style={{ fontSize: "1.5rem" }}>Payment receipt</h1>
+      <div className="row between"><h1 style={{ fontSize: "1.5rem" }}>Payment receipt</h1><PrintButton label="Print receipt" /></div>
       <p className="muted">Kogi State College of Education, Ankpa</p>
       <table className="table"><tbody>
         <tr><th scope="row">Student</th><td>{r.name} ({r.matric_no})</td></tr>

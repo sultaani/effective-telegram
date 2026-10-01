@@ -29,7 +29,7 @@ npm run seed && npm run dev
 
 | Area | Highlights |
 |---|---|
-| Public site | Mega-menu navigation modelled on the Federal University Lokoja site structure (About, Academics, Admissions, Student, Research, Campus, TETFund, Support Services, News); full-bleed hero, programme finder, Provost's welcome, *Study at KCOE*, *What our students say*, latest news, Middlesex-style footer; schools, programmes with course lists, news, events, FAQ, downloads, gallery, site search, sitemap, robots, Open Graph, JSON-LD, canonical URLs |
+| Public site | Navbar styled after the UNITBV inspiration with the Federal University Lokoja menu structure (About, Academics, Admissions, Student, Research, Campus, TETFund, Support Services, News); full-bleed hero (the supplied school photograph), programme finder, circular-photo Provost welcome, *Study at KCOE*, *What our students say*, latest news, minimal footer (logo, name, contact, social); schools, programmes with course lists, news, events, FAQ, downloads, gallery, site search, sitemap, robots, Open Graph, JSON-LD, canonical URLs |
 | CMS | Pages, news, announcements, events, FAQs, downloads, testimonials; images by URL or upload; Draft → Review → Published → Archived; internal Verified / Awaiting confirmation / Demo flag (never shown to the public); role-limited publishing; audit trail |
 | Student portal | Action-first dashboard, course registration with unit limits and approval, results with GPA/CGPA, fees, payments and receipts, timetable, calendar, notifications, support |
 | Staff portal | Assigned courses, class lists, score entry, submit to HOD, HOD/Dean approvals scoped to department/school |
@@ -37,11 +37,13 @@ npm run seed && npm run dev
 
 Result workflow: lecturer saves → submits → HOD/Dean approves or returns → Examinations office publishes → student notified. Students never see unpublished results.
 
-## 4. Images and content you must replace
+## 4. Design, images and content you must replace
 
-- Photographs are hotlinked from Unsplash (free licence; credits in `src/lib/images.ts`). Replace them with the college's own photography by editing that file or setting images in the CMS. The Provost's portrait has no stock photo: upload the real one on the *Provost's welcome* page in the CMS.
+See `docs/design-system.md` for the two design systems (website: green, blue, golden yellow; portals: deep navy, forest green, golden yellow). The hero photo is 1025 px wide, so it looks soft on very large screens: replace `public/images/hero.jpg` with a larger original when you have one. The crest is also the favicon.
+
+
+- News, study and testimonial photographs are hotlinked from Unsplash (free licence; credits in `src/lib/images.ts`); replace them with the college's own photography in the CMS. The Provost's welcome text is a placeholder to be edited in the CMS once approved; his name is set in `src/lib/site-config.ts` together with the footer phone, email, address and social links (confirm them).
 - Sample content: programmes, departments, staff, fees, dates, news, testimonials, and the wording of most pages are placeholders written for the demo. The five school names and the college name come from the college's official site. The Provost's welcome is placeholder text that must be replaced with a message the Provost has approved.
-- The crest in the header is a placeholder drawing.
 - Assumptions to confirm: grading scale and CA/exam split (`src/lib/grading.ts`), unit load 15–24 (`src/services/registration.ts`).
 - Payments use a built-in simulator (DemoPay) that follows the same signed-webhook path a real gateway uses. Connect Remita/Paystack by replacing `src/app/pay` and the initiation step.
 - Email/SMS events are queued in the `outbox` table; a sender still needs to be connected.
@@ -52,7 +54,7 @@ scrypt password hashing; random session tokens (only hashes stored), HttpOnly + 
 
 ## 6. Backups
 
-Neon provides point-in-time restore and branching; enable it for the production project. As an independent copy, `npm run backup -- /path/to/backups 14` writes a consistent snapshot of every table (gzip JSON) and keeps the newest 14. Restore into a migrated database with `CONFIRM=yes npm run restore -- backups/<timestamp>`. Test a restore each term.
+Neon provides point-in-time restore and branching; enable it for the production project. As an independent copy, `npm run backup -- /path/to/backups 14` writes a consistent snapshot of every table (gzip JSON) and keeps the newest 14. Restore into a migrated database with `CONFIRM=yes npm run restore -- backups/<timestamp>` (tested: row counts match and id sequences continue; uploaded files are stored in the database and included). Test a restore each term.
 
 ## 7. Testing
 

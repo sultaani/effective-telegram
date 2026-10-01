@@ -20,7 +20,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
       {str(sp.paid) === "1" && <Alert kind="ok" title="Payment confirmed">Your payment was verified. Your receipt is below.</Alert>}
       {str(sp.paid) === "0" && <Alert kind="error" title="Payment not completed">No money was taken. You can try again.</Alert>}
       {str(sp.e) && <Alert kind="error" title="Could not start payment">{str(sp.e)}</Alert>}
-      <div className="grid cols-3" style={{ marginBottom: "var(--space-6)" }}>
+      <div className="grid cols-3" style={{ marginBottom: "24px" }}>
         <div className="panel stat" style={{ margin: 0 }}><div className="v">{naira(invoices.reduce((a, i) => a + i.amount_kobo, 0))}</div><div className="l">Total charged</div></div>
         <div className="panel stat" style={{ margin: 0 }}><div className="v">{naira(invoices.reduce((a, i) => a + i.paid_kobo, 0))}</div><div className="l">Total paid</div></div>
         <div className="panel stat" style={{ margin: 0 }}><div className="v">{naira(owed)}</div><div className="l">Outstanding balance</div></div>

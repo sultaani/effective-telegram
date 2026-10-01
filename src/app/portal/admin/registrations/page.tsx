@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { requirePermission } from "../../../../lib/auth";
 import { pendingRegistrations } from "../../../../services/registration";
 import { registrationDecision } from "../../../actions/admin";
+import { ConfirmButton } from "../../../../components/Interactive";
 import { Empty } from "../../../../components/bits";
 
 export const metadata: Metadata = { title: "Course registrations" };
@@ -17,7 +18,7 @@ export default async function Page() {
           <tbody>{rows.map((r) => (
             <tr key={r.student_id}><td data-label="Student">{r.name}<br /><span className="small muted">{r.matric_no}</span></td><td data-label="Programme">{r.programme}</td><td data-label="Level" className="num">{r.level}</td><td data-label="Courses" className="num">{r.courses}</td><td data-label="Units" className="num">{r.units}</td>
               <td data-label="Decision"><form action={registrationDecision} className="row" style={{ justifyContent: "flex-end" }}><input type="hidden" name="student" value={r.student_id} />
-                <button name="decision" value="approve" className="btn small">Approve</button><button name="decision" value="reject" className="btn small secondary">Return</button></form></td></tr>))}</tbody></table></div>
+                <button name="decision" value="approve" className="btn small">Approve</button><ConfirmButton name="decision" value="reject" className="btn small secondary" message="Return this registration to the student?">Return</ConfirmButton></form></td></tr>))}</tbody></table></div>
       )}
     </>
   );

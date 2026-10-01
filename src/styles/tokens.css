@@ -1,52 +1,79 @@
-/* KCOE design tokens. Light theme only: no dark-mode overrides by design.
-   Text pairs were checked against WCAG AA (>= 4.5:1).
-   Brand colours are PROVISIONAL until the college confirms its crest colours. */
+/* KCOE design tokens. Light theme only.
+ * Website  -> docs source: design-input/website-design.md (forest green, royal blue, golden yellow; Figtree stands in for the licensed UTSans).
+ * Portals  -> docs source: design-input/portals-ui-design.md structure, recoloured: deep navy, forest green, golden yellow.
+ * Text pairs were chosen for WCAG AA (>= 4.5:1). Yellow is used for fills/borders/badges with dark text, never as text on white. */
 :root {
-  --kcoe-white: #ffffff;
-  --kcoe-surface: #f5f7fa;
-  --kcoe-surface-2: #eaeff5;
-  --kcoe-border: #d5dde8;
-  --kcoe-ink: #1a2433;      /* 15.6:1 on white */
-  --kcoe-muted: #4a5568;    /* 7.5:1 on white */
+  /* ---- Website palette ---- */
+  --green: #166534;          /* primary */
+  --green-hover: #14532d;
+  --green-tint: #f3f7f4;     /* muted-surface */
+  --blue: #1d4ed8;           /* secondary: links, info */
+  --blue-tint: #eff4ff;
+  --yellow: #eab308;         /* tertiary: highlights, badges, selected accents */
+  --yellow-tint: #fef9c3;
+  --yellow-ink: #854d0e;     /* readable text on yellow tints */
+  --ink: #111827;
+  --ink-2: #4b5563;          /* muted text, 7.5:1 on white */
+  --line: #d1d5db;
+  --white: #ffffff;
+  --error: #dc2626;
+  --error-ink: #b91c1c;
+  --error-tint: #fef2f2;
 
-  /* Public site accents (green leads; red for deadlines and alerts only) */
-  --kcoe-green: #17704a;    /* 6.1:1 */
-  --kcoe-green-tint: #e6f3ec;
-  --kcoe-blue: #1b5aa6;     /* 6.9:1 */
-  --kcoe-blue-tint: #e8f0fa;
-  --kcoe-red: #b3261e;      /* 6.5:1 */
-  --kcoe-red-tint: #fbebea;
+  /* ---- Portal palette (deep navy / forest green / golden yellow) ---- */
+  --navy: #12284c;
+  --navy-hover: #0b1d38;
+  --navy-tint: #eef2f9;
+  --navy-line: #c9d3e3;
+  --gold: #eab308;
+  --gold-ink: #a16207;       /* text on white: 4.9:1 */
+  --surface-base: #f8fafc;
+  --p-border: #e2e8f0;
+  --p-input: #cbd5e1;
+  --p-ink: #0f172a;
+  --p-muted: #475569;
+  --secondary-stat: #166534;
+  --success-ink: #15803d; --success-tint: #dcfce7;
+  --warn-ink: #a16207;    --warn-tint: #fef9c3;
+  --info-ink: #1d4ed8;    --info-tint: #dbeafe;
 
-  /* Portal accent: royal blue dominates */
-  --portal-primary: #2148c0;       /* 7.6:1 on white; white text on it 7.6:1 */
-  --portal-primary-hover: #1a3a9c;
-  --portal-primary-tint: #e9eefb;
-  --portal-focus: #2148c0;
+  /* ---- Type ---- */
+  --font-site: "Figtree Variable", "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-head: "Vollkorn Variable", "Vollkorn", Georgia, "Times New Roman", serif;
+  --font-body: "DM Sans Variable", "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Source Code Pro", ui-monospace, Consolas, monospace;
 
-  /* Semantic states: always paired with an icon and a text label */
-  --state-success: #17704a;
-  --state-warning: #8a5300;
-  --state-error: #b3261e;
+  /* ---- Spacing (website scale 6/14/22/30/60; portal scale 4/8/12/16/24/32/48/64) ---- */
+  --sp-xs: 6px; --sp-sm: 14px; --sp-md: 22px; --sp-lg: 30px; --sp-xl: 60px;
+  --p1: 4px; --p2: 8px; --p3: 12px; --p4: 16px; --p5: 24px; --p6: 32px; --p7: 48px; --p8: 64px;
+  --measure: 68ch; --duration: 150ms;
 
-  --font-heading: "Newsreader Variable", "Newsreader", Georgia, "Times New Roman", serif;
-  --font-body: "Public Sans Variable", "Public Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.25rem;
-  --text-xl: clamp(1.5rem, 1.2rem + 1vw, 2rem);
-  --text-hero: clamp(2.25rem, 1.5rem + 3vw, 3.75rem);
-  --measure: 68ch;
-
-  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
-  --space-6: 1.5rem; --space-8: 2rem; --space-12: 3rem; --space-16: 4rem;
-  --radius-sm: 2px; --radius-md: 4px;
-  --duration: 150ms;
+  /* ---- Shadows (portal only; the website stays flat) ---- */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md: 0 2px 4px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 12px rgba(0,0,0,.08);
+  --shadow-xl: 0 8px 24px rgba(0,0,0,.10);
 }
-[data-surface="public"] { --accent: var(--kcoe-green); --accent-tint: var(--kcoe-green-tint); --link: var(--kcoe-blue); }
-[data-surface="portal"] { --accent: var(--portal-primary); --accent-tint: var(--portal-primary-tint); --link: var(--portal-primary); }
 
-body { background: var(--kcoe-white); color: var(--kcoe-ink); font-family: var(--font-body); }
-:focus-visible { outline: 3px solid var(--portal-focus); outline-offset: 2px; }
-@media (prefers-reduced-motion: reduce) {
-  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+/* Per-surface values read by the shared component styles in globals.css */
+[data-surface="public"] {
+  --accent: var(--green); --accent-hover: var(--green-hover); --accent-tint: var(--green-tint);
+  --link: var(--blue); --text: var(--ink); --text-2: var(--ink-2); --border: var(--line); --bg: var(--white);
+  --font-ui: var(--font-site); --font-display: var(--font-site);
+  --r-btn: 9999px; --r-card: 8px; --r-input: 4px; --btn-h: 46px; --btn-pad: 0 32px;
+  --card-pad: 16px; --card-shadow: none; --input-border: #9ca3af; --focus-ring: 0 0 0 3px rgba(22,101,52,.28);
+  --head-weight: 300;
 }
+[data-surface="portal"] {
+  --accent: var(--navy); --accent-hover: var(--navy-hover); --accent-tint: var(--navy-tint);
+  --link: var(--navy); --text: var(--p-ink); --text-2: var(--p-muted); --border: var(--p-border); --bg: var(--surface-base);
+  --font-ui: var(--font-body); --font-display: var(--font-head);
+  --r-btn: 6px; --r-card: 6px; --r-input: 6px; --btn-h: 42px; --btn-pad: 0 20px;
+  --card-pad: 24px; --card-shadow: var(--shadow-md); --input-border: var(--p-input); --focus-ring: 0 0 0 3px rgba(18,40,76,.25);
+  --head-weight: 700;
+}
+
+body { background: var(--bg, var(--white)); color: var(--text, var(--ink)); font-family: var(--font-ui, var(--font-site)); }
+:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+[data-surface="public"] :focus-visible { outline-color: var(--green); }
+@media (prefers-reduced-motion: reduce) { * { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
